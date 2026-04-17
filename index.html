@@ -869,30 +869,32 @@ async function loadFromSheets() {
       });
     }
 
-    // ── 區塊4：週次業績 (section=week, label, gin, pl)
-    // CSV header row: section,wk,date,... — 跳過；資料行第二欄=W1~W5
-    // 月份從 date 欄的 M/D 反推（取第一筆的月份即可）
+    // ── 區塊4：週次業績 (section=week, month, label, gin, pl)
+    // 新格式：第2欄=month數字，第3欄=W1~W5，第4欄=gin，第5欄=pl
     const weekRaw = rows.filter(r => r[0]==='week');
     if(weekRaw.length > 0){
-      // 找出這批資料屬於哪個月（從 label 欄的日期判斷，例如 "W1  4/1–5"）
-      const firstLabel = weekRaw[0][1] || '';
-      const mMatch = firstLabel.match(/(\d+)\//);
-      const wMonth = mMatch ? parseInt(mMatch[1]) : currentWeekMonth;
-      const wd = ALL_WEEK_DATA[wMonth];
-      if(wd){
-        weekRaw.forEach((r,i) => {
-          if(i < wd.gin.length){
-            wd.gin[i] = n(r[2]);
-            wd.pl[i]  = n(r[3]);
-          }
-        });
-        wd.filled = `從 Sheets 更新`;
-        // 若目前顯示的就是這個月，同步 weekGIN/weekPL
-        if(wMonth === currentWeekMonth){
-          wd.gin.forEach((v,i) => { weekGIN[i]=v; weekPL[i]=v; });
-          wd.pl.forEach((v,i)  => { weekPL[i]=v; });
+      // 按月份分組，每5筆為一個月
+      weekRaw.forEach(r => {
+        const wMonth = parseInt(r[1]) || 0;
+        const label  = r[2] || '';
+        const ginVal = n(r[3]);
+        const plVal  = n(r[4]);
+        if(!wMonth || !ALL_WEEK_DATA[wMonth]) return;
+        const wd = ALL_WEEK_DATA[wMonth];
+        const wIdx = ['W1','W2','W3','W4','W5'].indexOf(label);
+        if(wIdx >= 0){
+          wd.gin[wIdx] = ginVal;
+          wd.pl[wIdx]  = plVal;
         }
-      }
+      });
+      // 標記已從 Sheets 更新的月份
+      [1,2,3,4,5,6,7,8,9,10,11,12].forEach(m => {
+        const wd = ALL_WEEK_DATA[m];
+        if(wd && wd.gin.some(v=>v>0)) wd.filled = '從 Sheets 更新';
+      });
+      // 若目前顯示月份已更新，同步 weekGIN/weekPL
+      const curWd = ALL_WEEK_DATA[currentWeekMonth];
+      if(curWd){ curWd.gin.forEach((v,i)=>{weekGIN[i]=v;}); curWd.pl.forEach((v,i)=>{weekPL[i]=v;}); }
     }
 
     document.getElementById('loadingBar').style.width = '100%';
