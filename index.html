@@ -449,7 +449,7 @@ svg { display: block; flex-shrink: 0; }
     </div>
   </div>
 
-  <div class="grid-2">
+  <div class="grid-3">
     <div class="card">
       <div class="card-header">
         <div>
@@ -461,7 +461,7 @@ svg { display: block; flex-shrink: 0; }
           <button class="tab-btn" onclick="switchOvChart('pl',this)">PL</button>
         </div>
       </div>
-      <canvas id="ovMonthChart" height="200"></canvas>
+      <canvas id="ovMonthChart" height="180"></canvas>
     </div>
     <div class="card">
       <div class="card-header">
@@ -470,18 +470,17 @@ svg { display: block; flex-shrink: 0; }
           <div class="card-sub">GIN 通路各品牌累計</div>
         </div>
       </div>
-      <canvas id="ovPieGIN" height="200"></canvas>
+      <canvas id="ovPieGIN" height="180"></canvas>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">品牌佔比 PL（1~4 月）</div>
-        <div class="card-sub">PL 通路各品牌累計</div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">品牌佔比 PL（1~4 月）</div>
+          <div class="card-sub">PL 通路各品牌累計</div>
+        </div>
       </div>
+      <canvas id="ovPiePL" height="180"></canvas>
     </div>
-    <canvas id="ovPiePL" height="160"></canvas>
   </div>
 
   <div class="card">
