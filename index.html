@@ -309,6 +309,10 @@ svg { display: block; flex-shrink: 0; }
   .grid-3   { grid-template-columns: 1fr 1fr; }
 }
 
+/* hide mobile elements on desktop by default */
+.mobile-header { display: none; }
+.mobile-tabbar { display: none; }
+
 /* ══════════════════════════════════
    RESPONSIVE — MOBILE
    ≤ 768px: hide sidebar, show bottom nav + top header
@@ -428,9 +432,7 @@ svg { display: block; flex-shrink: 0; }
   .data-table th, .data-table td { padding: 7px 8px; }
 }
 
-/* hide mobile elements on desktop */
-.mobile-header  { display: none; }
-.mobile-tabbar  { display: none; }
+/* hide mobile elements on desktop — must come BEFORE media query to avoid override */
 </style>
 </head>
 <style>
