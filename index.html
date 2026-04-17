@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>粉紅網樞 × GINUNION | 指標 Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ══════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════ */
+:root {
+  /* ── Primary palette: soft pink-purple, grey, white ── */
+  --gin:       #8B7FC8;   /* GIN  = muted indigo-purple  */
+  --gin-lt:    #EAE7F8;
+  --gin-dk:    #5548A0;
+  --pl:        #C4708C;   /* PL   = dusty rose-pink      */
+  --pl-lt:     #F7E2EB;
+  --pl-dk:     #9A4060;
+
+  --surface-0: #FFFFFF;
+  --surface-1: #F6F5FB;   /* page bg — very pale lavender */
+  --surface-2: #EDEAF6;   /* hover / subtle fill          */
+  --border:    #E2DEEF;
+  --muted:     #9E9AB5;
+  --text:      #1C1B2E;
+  --text-2:    #6B6880;
+
+  /* status */
+  --up:        #3DB87A;
+  --dn:        #E05A5A;
+  --neu:       #A0A0B8;
+  --line-grn:  #06C755;
+
+  /* sidebar */
+  --sb-w:      236px;
+
+  /* radii */
+  --r-sm:  10px;
+  --r-md:  16px;
+  --r-lg:  22px;
+  --r-xl:  28px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, 'PingFang TC', 'Helvetica Neue', 'Segoe UI', sans-serif;
+  background: var(--surface-1);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+svg { display: block; flex-shrink: 0; }
+
+/* ══════════════════════════════════
+   SIDEBAR
+══════════════════════════════════ */
+.sidebar {
+  width: var(--sb-w);
+  background: var(--surface-0);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 100;
+  box-shadow: 4px 0 24px rgba(90,72,160,.06);
+}
+
+/* logo */
+.sb-logo {
+  padding: 26px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sb-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--gin-dk) 0%, var(--gin) 100%);
+  color: #fff;
+  padding: 6px 12px 6px 8px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+}
+.sb-logo-pill svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sb-logo-pill span { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.sb-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; padding-left: 2px; }
+.sb-sub   { font-size: 11px; color: var(--muted); padding-left: 2px; margin-top: 2px; }
+
+/* nav */
+.sb-nav { flex: 1; padding: 12px 12px 0; overflow-y: auto; }
+.sb-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  color: var(--muted); text-transform: uppercase;
+  padding: 14px 8px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-2);
+  transition: background .15s, color .15s;
+  margin-bottom: 2px;
+}
+.nav-item:hover { background: var(--surface-2); color: var(--text); }
+.nav-item.active {
+  background: var(--gin-lt);
+  color: var(--gin-dk);
+  font-weight: 600;
+}
+.nav-icon { width: 18px; height: 18px; }
+.nav-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* cloud links section */
+.sb-cloud {
+  padding: 10px 12px 14px;
+  border-top: 1px solid var(--border);
+}
+.sb-cloud-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  color: var(--muted); text-transform: uppercase;
+  padding: 0 8px 8px;
+}
+.cloud-link {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-2);
+  transition: background .15s, color .15s;
+  margin-bottom: 2px;
+}
+.cloud-link:hover { background: var(--surface-2); color: var(--gin-dk); }
+.cloud-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cloud-link .link-badge {
+  margin-left: auto;
+  font-size: 10px; padding: 2px 7px;
+  background: var(--gin-lt); color: var(--gin-dk);
+  border-radius: 20px; font-weight: 600;
+}
+
+/* footer */
+.sb-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 10.5px; color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════
+   MAIN
+══════════════════════════════════ */
+.main {
+  margin-left: var(--sb-w);
+  flex: 1;
+  padding: 28px 30px;
+  max-width: calc(100vw - var(--sb-w));
+  overflow-x: hidden;
+}
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── page header ── */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.page-title { font-size: 21px; font-weight: 700; color: var(--text); }
+.page-sub   { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.pill-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 11px; font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+.pill-badge svg { width: 12px; height: 12px; stroke: var(--up); fill: none; stroke-width: 2.5; }
+
+/* ── KPI CARDS ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 18px; }
+.kpi-card {
+  background: var(--surface-0);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  padding: 18px 18px 16px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow .18s;
+}
+.kpi-card:hover { box-shadow: 0 6px 20px rgba(90,72,160,.10); }
+.kpi-card-accent {
+  position: absolute; top: 0; right: 0;
+  width: 72px; height: 72px;
+  border-radius: 0 var(--r-lg) 0 72px;
+  opacity: .18;
+}
+.kpi-icon {
+  width: 34px; height: 34px;
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.kpi-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.kpi-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; font-weight: 500; }
+.kpi-value { font-size: 22px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.kpi-delta {
+  font-size: 11px; margin-top: 7px;
+  display: flex; align-items: center; gap: 4px; font-weight: 500;
+}
+.kpi-delta svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.up  { color: var(--up);  }
+.dn  { color: var(--dn);  }
+.neu { color: var(--neu); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface-0);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  transition: box-shadow .18s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(90,72,160,.07); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
+.card-title { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.card-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── GRIDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* ── TAB BAR ── */
+.tab-bar {
+  display: inline-flex; gap: 3px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 3px;
+}
+.tab-btn {
+  padding: 5px 14px; border-radius: 50px; border: none;
+  background: transparent; font-size: 12px; cursor: pointer;
+  color: var(--muted); font-weight: 500; transition: all .18s;
+}
+.tab-btn.active {
+  background: var(--surface-0); color: var(--gin-dk);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(90,72,160,.12);
+}
+
+/* ── BRAND TAGS ── */
+.brand-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+.brand-tag {
+  padding: 5px 14px; border-radius: 50px; font-size: 12px;
+  font-weight: 600; cursor: pointer; border: 2px solid transparent;
+  transition: border-color .15s, box-shadow .15s;
+}
+.brand-tag:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.brand-tag.active { border-color: currentColor; }
+
+/* ── LEGEND ── */
+.legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-2); }
+.leg-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.leg-line { width: 18px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
+.leg-dash { width: 18px; height: 0; border-bottom: 2.5px dashed; flex-shrink: 0; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  background: var(--gin-lt); color: var(--gin-dk);
+  font-weight: 600; padding: 9px 11px;
+  text-align: right; border-bottom: 1.5px solid var(--border);
+  white-space: nowrap;
+}
+.data-table th:first-child { text-align: left; border-radius: var(--r-sm) 0 0 0; }
+.data-table th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
+.data-table td { padding: 8px 11px; text-align: right; border-bottom: 1px solid var(--surface-2); }
+.data-table td:first-child { text-align: left; font-weight: 500; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr.mom-row  td { color: #5A5670; font-size: 11px; background: var(--surface-1); font-weight: 500; }
+.data-table tr.total-row td { font-weight: 700; background: var(--gin-lt); color: var(--gin-dk); }
+.data-table tbody tr:hover td { background: var(--surface-1); }
+.pos { color: var(--up); font-weight: 600; }
+.neg { color: var(--dn); font-weight: 600; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1140px) {
+  .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  .grid-2   { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<style>
+#loadingOverlay {
+  position: fixed; inset: 0; background: rgba(246,245,251,.88);
+  z-index: 9999; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px;
+  transition: opacity .3s;
+}
+#loadingBar {
+  width: 0%; height: 4px; background: var(--gin);
+  border-radius: 2px; transition: width .4s ease;
+  max-width: 240px;
+}
+.loading-track { width: 240px; height: 4px; background: var(--gin-lt); border-radius: 2px; overflow: hidden; }
+.loading-text { font-size: 13px; color: var(--muted); }
+</style>
+<body>
+<div id="loadingOverlay">
+  <div class="sb-logo-pill" style="margin:0">
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    <span>PL × GIN</span>
+  </div>
+  <div class="loading-track"><div id="loadingBar"></div></div>
+  <div class="loading-text">從 Google Sheets 載入最新資料…</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════ -->
+<aside class="sidebar">
+
+  <!-- Logo -->
+  <div class="sb-logo">
+    <div class="sb-logo-pill">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span>PL × GIN</span>
+    </div>
+    <div class="sb-title">指標管理<br>Dashboard</div>
+    <div class="sb-sub">2026 年度</div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="sb-nav">
+    <div class="sb-section-label">主選單</div>
+
+    <div class="nav-item active" onclick="showPage('overview',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+      總覽
+    </div>
+    <div class="nav-item" onclick="showPage('brands',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+      品牌業績
+    </div>
+    <div class="nav-item" onclick="showPage('history',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg></span>
+      歷年對比
+    </div>
+    <div class="nav-item" onclick="showPage('members',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      會員人數
+    </div>
+    <div class="nav-item" onclick="showPage('line',this)">
+      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      官方 LINE
+    </div>
+  </nav>
+
+  <!-- Cloud Links -->
+  <div class="sb-cloud">
+    <div class="sb-cloud-label">雲端資料</div>
+
+    <a class="cloud-link" href="https://docs.google.com/spreadsheets/d/1QiI2qe8ntPZGjiN1Nm_fcaMSeTnbXhW9Ar-eN7TNMoY/" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      主資料表
+      <span class="link-badge">Sheets</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div class="sb-footer">
+    <span id="updateTime">更新：2026 / 04 / 17</span><br>
+    來源：Google Sheets Live
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ─────────────── 總覽 ─────────────── -->
+<div id="page-overview" class="page active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">總覽</div>
+      <div class="page-sub">2026 年度累計 · 至 4 月 W2（4/16）</div>
+    </div>
+    <span class="pill-badge">
+      <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="3" fill="var(--up)" stroke="none"/></svg>
+      截至 4 / 16
+    </span>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--gin)"></div>
+      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="kpi-label">GIN 年累計業績</div>
+      <div class="kpi-value" style="color:var(--gin-dk)">$10.35M</div>
+      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>vs 2025 同期 −17%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--pl)"></div>
+      <div class="kpi-icon" style="background:var(--pl-lt);color:var(--pl-dk)">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="kpi-label">PL 年累計業績</div>
+      <div class="kpi-value" style="color:var(--pl-dk)">$1.61M</div>
+      <div class="kpi-delta up"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>vs 2025 同期 +30%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--gin)"></div>
+      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
+        <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </div>
+      <div class="kpi-label">PL 折扣碼人數</div>
+      <div class="kpi-value">1,148</div>
+      <div class="kpi-delta neu">— 月末快照</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--pl)"></div>
+      <div class="kpi-icon" style="background:var(--pl-lt);color:var(--pl-dk)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      </div>
+      <div class="kpi-label">PL 社群影響力</div>
+      <div class="kpi-value">938</div>
+      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>−4 vs 上月</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">月業績趨勢（2026）</div>
+          <div class="card-sub">各月合計 NT$</div>
+        </div>
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchOvChart('gin',this)">GIN</button>
+          <button class="tab-btn" onclick="switchOvChart('pl',this)">PL</button>
+        </div>
+      </div>
+      <canvas id="ovMonthChart" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">品牌佔比 GIN（1~4 月）</div>
+          <div class="card-sub">GIN 通路各品牌累計</div>
+        </div>
+      </div>
+      <canvas id="ovPieGIN" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">品牌佔比 PL（1~4 月）</div>
+        <div class="card-sub">PL 通路各品牌累計</div>
+      </div>
+    </div>
+    <canvas id="ovPiePL" height="160"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">4 月 週次業績進度</div>
+        <div class="card-sub">W1 (4/1–4/5) · W2 (4/6–4/12) 已填入</div>
+      </div>
+      <div class="legend">
+        <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>GIN</span>
+        <span class="leg"><span class="leg-dot" style="background:var(--pl)"></span>PL</span>
+      </div>
+    </div>
+    <canvas id="weekBarChart" height="100"></canvas>
+  </div>
+</div>
+
+
+<!-- ─────────────── 品牌業績 ─────────────── -->
+<div id="page-brands" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">品牌業績</div>
+      <div class="page-sub">2026 年各品牌月累計</div>
+    </div>
+  </div>
+
+  <div class="brand-tags" id="brandTags">
+    <span class="brand-tag active" style="color:#9A4060;background:#F7E2EB"   onclick="setBrand('GreenGold',this)">GreenGold</span>
+    <span class="brand-tag"        style="color:#2A7058;background:#D6EFE6"   onclick="setBrand('Ovie',this)">Ovie</span>
+    <span class="brand-tag"        style="color:#4A3D9C;background:#E4E0F6"   onclick="setBrand('CHESS',this)">CHESS</span>
+    <span class="brand-tag"        style="color:#C05010;background:#FCE8D5"   onclick="setBrand('F0T1',this)">F0T1</span>
+    <span class="brand-tag"        style="color:#156070;background:#D2EEF0"   onclick="setBrand('PocketMeal',this)">PocketMeal</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="brandChartTitle">GreenGold — GIN vs PL</div>
+          <div class="card-sub">2026 月業績 NT$</div>
+        </div>
+        <div class="legend">
+          <span class="leg"><span class="leg-line" style="background:var(--gin)"></span>GIN</span>
+          <span class="leg"><span class="leg-dash" style="border-color:var(--pl)"></span>PL</span>
+        </div>
+      </div>
+      <canvas id="brandLineChart" height="210"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">2025 vs 2026 同期對比</div>
+          <div class="card-sub" id="brandCompSub">GreenGold · GIN · 1~4 月</div>
+        </div>
+        <div class="legend">
+          <span class="leg"><span class="leg-dot" style="background:var(--gin-lt);border:1.5px solid var(--gin)"></span>2025</span>
+          <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>2026</span>
+        </div>
+      </div>
+      <canvas id="brandCompChart" height="210"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>品牌 / 通路</th><th>1 月</th><th>2 月</th><th>3 月</th><th>4 月</th><th>合計</th></tr></thead>
+        <tbody id="brandTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────── 歷年對比 ─────────────── -->
+<div id="page-history" class="page">
+  <div class="page-header">
+    <div class="page-title">歷年業績對比</div>
+  </div>
+  <div class="tab-bar" style="margin-bottom:18px">
+    <button class="tab-btn active" onclick="switchHistChannel('GIN',this)">GIN 通路</button>
+    <button class="tab-btn" onclick="switchHistChannel('PL',this)">PL 通路</button>
+  </div>
+  <div id="histCards"></div>
+</div>
+
+
+<!-- ─────────────── 會員人數 ─────────────── -->
+<div id="page-members" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">會員 &amp; 折扣碼人數</div>
+      <div class="page-sub">月末快照趨勢</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--pl)"></div>
+      <div class="kpi-icon" style="background:var(--pl-lt);color:var(--pl-dk)">
+        <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </div>
+      <div class="kpi-label">PL 折扣碼（4 月末）</div>
+      <div class="kpi-value" style="color:var(--pl-dk)">1,148</div>
+      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>−1 vs 上月</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--pl)"></div>
+      <div class="kpi-icon" style="background:var(--pl-lt);color:var(--pl-dk)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      </div>
+      <div class="kpi-label">PL 社群影響力（4 月末）</div>
+      <div class="kpi-value" style="color:var(--pl-dk)">938</div>
+      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>−4 vs 上月</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--gin)"></div>
+      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
+        <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>
+      </div>
+      <div class="kpi-label">GIN 折扣碼（4 月末）</div>
+      <div class="kpi-value" style="color:var(--gin-dk)">322</div>
+      <div class="kpi-delta up"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>+1 vs 上月</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--gin)"></div>
+      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="kpi-label">4 月 CODE 完成（目標 40）</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-delta neu">進度 7.5%</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">折扣碼 &amp; 社群人數 月趨勢</div>
+      <div class="legend">
+        <span class="leg"><span class="leg-line" style="background:var(--pl)"></span>PL 折扣碼</span>
+        <span class="leg"><span class="leg-dash" style="border-color:#2AABB0"></span>PL 社群</span>
+        <span class="leg"><span class="leg-line" style="background:#E8A020"></span>GIN 折扣碼</span>
+      </div>
+    </div>
+    <canvas id="memberChart" height="150"></canvas>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">PL CODE 完成人數（月）</div></div>
+      <canvas id="codeBarChart" height="190"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">折扣碼人數組成（4 月末）</div></div>
+      <canvas id="memberPieChart" height="190"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────── 官方LINE ─────────────── -->
+<div id="page-line" class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">官方 LINE@ 每日數字</div>
+      <div class="page-sub">總人數 = 當日快照 · 其餘 = 當日新增</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:#06C755"></div>
+      <div class="kpi-icon" style="background:#D4F5E2;color:#0A7A3A">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="kpi-label">LINE 總人數（4/16）</div>
+      <div class="kpi-value" style="color:#0A7A3A">2,644</div>
+      <div class="kpi-delta up"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>+109 vs 4/1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--gin)"></div>
+      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="kpi-label">首次開啟 累計（4 月）</div>
+      <div class="kpi-value">50</div>
+      <div class="kpi-delta neu">4/1 ~ 4/16</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--dn)"></div>
+      <div class="kpi-icon" style="background:#FDEAEA;color:var(--dn)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div class="kpi-label">累積封鎖數（4/16）</div>
+      <div class="kpi-value" style="color:var(--dn)">499</div>
+      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>+23 vs 4/1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-accent" style="background:var(--up)"></div>
+      <div class="kpi-icon" style="background:#DFF5EB;color:#1A8A50">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="kpi-label">當月開通 CODE（4 月）</div>
+      <div class="kpi-value" style="color:#1A8A50">25</div>
+      <div class="kpi-delta neu">4/1 ~ 4/16</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">LINE 總人數 日趨勢（4 月）</div>
+    </div>
+    <canvas id="lineChartFriends" height="120"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">累積封鎖數 日趨勢（4 月）</div>
+    </div>
+    <canvas id="lineChartBlock" height="100"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">4 月 每日明細</div></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>週次</th><th>日期</th><th>LINE 總人數</th><th>首次開啟</th><th>累積封鎖</th><th>完成 CODE</th><th>當日開通</th></tr></thead>
+        <tbody id="lineTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+// ─── PALETTE ───
+const C = {
+  gin:      '#8B7FC8',
+  ginLt:    'rgba(139,127,200,.22)',
+  ginFill:  'rgba(139,127,200,.07)',
+  pl:       '#C4708C',
+  plLt:     'rgba(196,112,140,.22)',
+  plFill:   'rgba(196,112,140,.07)',
+  plSocial: '#2AABB0',          /* 4. PL社群 — teal，與粉紅明顯區分 */
+  gold:     '#E8A020',
+  green:    '#06C755',
+  red:      '#E05A5A',
+  grid:     '#EDEBF5',
+  brand: {
+    GreenGold:  '#C4708C',
+    Ovie:       '#3A8C6E',
+    CHESS:      '#6055B0',
+    Miidel:     '#A07850',
+    F0T1:       '#D4620A',
+    PocketMeal: '#1E8A8A'
+  }
+};
+
+// ─── GOOGLE SHEETS CONFIG ───
+const SHEET_ID   = '1QiI2qe8ntPZGjiN1Nm_fcaMSeTnbXhW9Ar-eN7TNMoY';
+const SHEET_NAME = '_Dashboard';   // 摘要分頁名稱
+
+// 抓取單一分頁 CSV，回傳二維陣列 [[row], [row], ...]
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  const res  = await fetch(url);
+  const text = await res.text();
+  return text.trim().split('\n').map(row =>
+    row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+       .map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim())
+  );
+}
+
+// 把 CSV 二維陣列解析成 { key: value } 物件（第一欄=key，第二欄=value）
+function parseKV(rows) {
+  const obj = {};
+  rows.forEach(r => { if(r[0]) obj[r[0]] = r[1] || ''; });
+  return obj;
+}
+
+// 把 CSV 二維陣列（第一列=header）解析成物件陣列
+function parseTable(rows) {
+  const headers = rows[0];
+  return rows.slice(1).map(r => {
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = r[i] || '');
+    return obj;
+  });
+}
+
+// 數字解析（去除 $ 與逗號）
+function n(v) { return parseFloat(String(v).replace(/[$,]/g,'')) || 0; }
+
+// 動態資料載入狀態
+let dataLoaded = false;
+
+// 從 _Dashboard 分頁更新全域資料，然後重繪圖表
+async function loadFromSheets() {
+  try {
+    document.getElementById('loadingBar').style.width = '30%';
+    const rows = await fetchSheet(SHEET_NAME);
+    document.getElementById('loadingBar').style.width = '70%';
+
+    // ── 區塊1：月業績 (行標題: section=monthly, brand, channel, m1~m12)
+    const monthly = parseTable(rows.filter(r => r[0]==='monthly' || r[0]==='brand'));
+    monthly.forEach(r => {
+      const brand = r['brand'], ch = r['channel'];
+      const vals  = [1,2,3,4,5,6,7,8,9,10,11,12].map(i => n(r['m'+i]));
+      if (ch==='GIN2026') gin2026[brand] = vals;
+      if (ch==='GIN2025') gin2025[brand] = vals;
+      if (ch==='PL2026')  pl2026[brand]  = vals;
+      if (ch==='PL2025')  pl2025[brand]  = vals;
+    });
+
+    // 重算月合計
+    const bs = Object.keys(gin2026);
+    for(let i=0;i<12;i++){
+      ginMonthly[i] = bs.reduce((a,b)=>a+gin2026[b][i],0);
+      plMonthly[i]  = bs.reduce((a,b)=>a+pl2026[b][i],0);
+    }
+
+    // ── 區塊2：會員人數 (section=member, metric, m1~m4)
+    const memberRows = parseTable(rows.filter(r => r[0]==='member'));
+    memberRows.forEach(r => {
+      const vals = [1,2,3,4].map(i => n(r['m'+i]));
+      if (r['metric']==='plCode')    memberData.plCode   = vals;
+      if (r['metric']==='plSocial')  memberData.plSocial = vals;
+      if (r['metric']==='ginCode')   memberData.ginCode  = vals;
+      if (r['metric']==='plCodeNew') memberData.plCodeNew= vals;
+    });
+
+    // ── 區塊3：官方LINE (section=line, date, wk, friends, fc, cb, reg, act)
+    const lineRows = parseTable(rows.filter(r => r[0]==='line'));
+    if(lineRows.length > 0){
+      lineData.length = 0;
+      lineRows.forEach(r => lineData.push({
+        wk: r['wk']||'', date: r['date'],
+        friends: n(r['friends']), fc: n(r['fc']),
+        cb: n(r['cb']), reg: n(r['reg']), act: n(r['act'])
+      }));
+    }
+
+    // ── 區塊4：4月週次 (section=week, label, gin, pl)
+    const weekRows = parseTable(rows.filter(r => r[0]==='week'));
+    if(weekRows.length > 0){
+      weekRows.forEach((r,i) => {
+        if(i<weekGIN.length){ weekGIN[i]=n(r['gin']); weekPL[i]=n(r['pl']); }
+      });
+    }
+
+    document.getElementById('loadingBar').style.width = '100%';
+    setTimeout(()=>{ document.getElementById('loadingOverlay').style.opacity='0'; setTimeout(()=>{ document.getElementById('loadingOverlay').style.display='none'; },300); },200);
+    dataLoaded = true;
+
+  } catch(e) {
+    console.warn('Sheets 讀取失敗，使用本機備份資料', e);
+    document.getElementById('loadingOverlay').style.display='none';
+  }
+}
+
+// ─── DATA (本機備份，Sheets 載入失敗時使用) ───
+const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+const gin2026 = {
+  GreenGold:  [3542633,3643921,472910,211468,0,0,0,0,0,0,0,0],
+  Ovie:       [116613,140245,166385,35011,0,0,0,0,0,0,0,0],
+  CHESS:      [1276138,252811,243137,93420,0,0,0,0,0,0,0,0],
+  Miidel:     [0,0,0,0,0,0,0,0,0,0,0,0],
+  F0T1:       [26824,15180,18772,10332,0,0,0,0,0,0,0,0],
+  PocketMeal: [23693,5499,2580,54284,0,0,0,0,0,0,0,0]
+};
+const gin2025 = {
+  GreenGold:  [5060122,4090490,784329,523896,1928764,1313043,1863837,1026711,738776,383133,10267339,2403900],
+  Ovie:       [247043,338841,1686323,887818,1250178,53612,45150,103407,59089,88967,208826,158359],
+  CHESS:      [344056,290573,693884,341966,397897,1850572,1382198,2033174,93899,129482,200720,744056],
+  Miidel:     [278296,73250,34164,9011,17653,3559,0,0,0,0,0,0],
+  F0T1:       [23478,77234,40068,46670,47666,26911,25118,42327,10958,36643,30928,43334],
+  PocketMeal: [0,199841,94932,93642,74614,52880,30656,215866,17553,23098,20079,43681]
+};
+const pl2026 = {
+  GreenGold:  [416946,489335,66388,16258,0,0,0,0,0,0,0,0],
+  Ovie:       [26723,41936,17959,6613,0,0,0,0,0,0,0,0],
+  CHESS:      [266367,100787,32682,35634,0,0,0,0,0,0,0,0],
+  Miidel:     [0,0,0,0,0,0,0,0,0,0,0,0],
+  F0T1:       [5300,29563,26063,10520,0,0,0,0,0,0,0,0],
+  PocketMeal: [2593,0,0,15298,0,0,0,0,0,0,0,0]
+};
+const pl2025 = {
+  GreenGold:  [635291,228193,86924,56573,204134,173084,205268,199401,188369,102789,1080179,296736],
+  Ovie:       [28900,54514,595081,464529,469932,23960,12430,32885,23240,28408,59056,46997],
+  CHESS:      [32558,174981,288316,105759,139475,687254,345375,415629,66538,75529,101532,119533],
+  Miidel:     [45107,6970,2513,4424,2809,2792,0,0,0,0,0,0],
+  F0T1:       [6593,0,5940,991,0,1046,4952,1386,1291,0,0,1550],
+  PocketMeal: [0,5096,13883,10432,2241,0,3580,3395,4636,0,0,0]
+};
+
+const ginMonthly = [4985901,4057656,903784,404515,0,0,0,0,0,0,0,0];
+const plMonthly  = [717929,661621,143092,84323,0,0,0,0,0,0,0,0];
+
+const memberData = {
+  plCode:   [1128,1136,1148,1148],
+  plSocial: [976,964,942,938],
+  ginCode:  [438,439,321,322],
+  plCodeNew:[3,8,12,3]
+};
+
+const lineData = [
+  {wk:'W1',date:'4/1',  friends:2535,fc:3, cb:476,reg:1, act:1},
+  {wk:'',  date:'4/2',  friends:2535,fc:1, cb:479,reg:0, act:0},
+  {wk:'',  date:'4/3',  friends:2535,fc:1, cb:480,reg:0, act:0},
+  {wk:'',  date:'4/4',  friends:2536,fc:0, cb:483,reg:0, act:0},
+  {wk:'',  date:'4/5',  friends:2536,fc:0, cb:484,reg:0, act:0},
+  {wk:'W2',date:'4/6',  friends:2537,fc:0, cb:484,reg:1, act:0},
+  {wk:'',  date:'4/7',  friends:2537,fc:0, cb:486,reg:1, act:1},
+  {wk:'',  date:'4/8',  friends:2541,fc:2, cb:486,reg:0, act:0},
+  {wk:'',  date:'4/9',  friends:2560,fc:9, cb:485,reg:2, act:0},
+  {wk:'',  date:'4/10', friends:2574,fc:2, cb:484,reg:2, act:1},
+  {wk:'',  date:'4/11', friends:2576,fc:0, cb:484,reg:0, act:0},
+  {wk:'',  date:'4/12', friends:2577,fc:0, cb:485,reg:0, act:0},
+  {wk:'W3',date:'4/13', friends:2579,fc:0, cb:486,reg:1, act:0},
+  {wk:'',  date:'4/14', friends:2598,fc:10,cb:489,reg:10,act:1},
+  {wk:'',  date:'4/15', friends:2630,fc:16,cb:497,reg:27,act:10},
+  {wk:'',  date:'4/16', friends:2644,fc:6, cb:499,reg:3, act:11},
+];
+
+const weekGIN    = [97687,306828,0,0,0];
+const weekPL     = [32607,51716,0,0,0];
+const weekLabels = ['W1  4/1–5','W2  4/6–12','W3  4/13–19','W4  4/20–26','W5  4/27–30'];
+
+// ─── HELPERS ───
+const fmt    = n => n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n);
+const fmtNTD = n => '$'+n.toLocaleString();
+const pct    = (a,b) => b===0?'—':((a-b)/b*100).toFixed(1)+'%';
+const sum    = arr => arr.reduce((a,c)=>a+c,0);
+const brands = Object.keys(gin2026);
+
+// Shared Chart.js config
+const CD = {
+  responsive: true, maintainAspectRatio: true,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#fff',
+      titleColor: '#1C1B2E', bodyColor: '#6B6880',
+      borderColor: '#E2DEEF', borderWidth: 1,
+      padding: 11, cornerRadius: 10,
+      callbacks: { label: ctx => '  '+fmtNTD(ctx.raw) }
+    }
+  },
+  scales: {
+    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
+    y: { grid:{color:'#EDEBF5'}, ticks:{font:{size:11},color:'#9E9AB5',callback:v=>fmt(v)}, border:{display:false} }
+  }
+};
+
+// ─── NAV ───
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ─── OVERVIEW ───
+let ovMonthChart;
+function initOverview() {
+  ovMonthChart = new Chart(
+    document.getElementById('ovMonthChart').getContext('2d'),
+    { type:'line', data: buildOvMonthData('gin'),
+      options:{ ...CD, elements:{ line:{tension:.4}, point:{radius:5,hoverRadius:7} } }
+    }
+  );
+  // Pie 共用設定
+  const makePieOpts = (total) => ({
+    responsive:true, maintainAspectRatio:true, cutout:'58%',
+    plugins:{
+      legend:{ display:true, position:'right',
+        labels:{ font:{size:11}, color:'#1C1B2E', boxWidth:10, padding:10 }
+      },
+      tooltip:{
+        backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
+        borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+        callbacks:{ label: ctx => '  '+fmtNTD(ctx.raw)+' ('+(ctx.raw/total*100).toFixed(1)+'%)' }
+      }
+    }
+  });
+
+  // GIN 圓餅
+  const ginVals  = brands.map(b=>sum(gin2026[b].slice(0,4)));
+  const ginTotal = sum(ginVals);
+  new Chart(document.getElementById('ovPieGIN').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:brands, datasets:[{
+      data:ginVals, backgroundColor:brands.map(b=>C.brand[b]),
+      borderWidth:3, borderColor:'#fff', hoverOffset:6
+    }]},
+    options: makePieOpts(ginTotal)
+  });
+
+  // PL 圓餅
+  const plVals  = brands.map(b=>sum(pl2026[b].slice(0,4)));
+  const plTotal = sum(plVals);
+  new Chart(document.getElementById('ovPiePL').getContext('2d'), {
+    type:'doughnut',
+    data:{ labels:brands, datasets:[{
+      data:plVals, backgroundColor:brands.map(b=>C.brand[b]),
+      borderWidth:3, borderColor:'#fff', hoverOffset:6
+    }]},
+    options: makePieOpts(plTotal)
+  });
+  // Week bar
+  new Chart(document.getElementById('weekBarChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:weekLabels, datasets:[
+      {label:'GIN',data:weekGIN,backgroundColor:C.gin,borderRadius:8,barPercentage:.55},
+      {label:'PL', data:weekPL, backgroundColor:C.pl, borderRadius:8,barPercentage:.55}
+    ]},
+    options:{ ...CD, plugins:{...CD.plugins,
+      legend:{display:true,labels:{font:{size:12},boxWidth:10,color:'#1C1B2E',padding:14}},
+      tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}
+    }}
+  });
+}
+
+function buildOvMonthData(mode) {
+  const data  = mode==='gin'?ginMonthly:plMonthly;
+  const color = mode==='gin'?C.gin:C.pl;
+  const fill  = mode==='gin'?C.ginFill:C.plFill;
+  return { labels:MONTHS, datasets:[{
+    label: mode==='gin'?'GIN 月合計':'PL 月合計',
+    data, borderColor:color, backgroundColor:fill, fill:true, tension:.4,
+    pointRadius:5, pointHoverRadius:7, pointBackgroundColor:color, borderWidth:2.5
+  }]};
+}
+function switchOvChart(mode, el) {
+  el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ovMonthChart.data = buildOvMonthData(mode);
+  ovMonthChart.update();
+}
+
+// ─── BRANDS ───
+let brandLineChart, brandCompChart;
+function initBrands() {
+  brandLineChart = new Chart(
+    document.getElementById('brandLineChart').getContext('2d'),
+    { type:'line', data:buildBrandLineData('GreenGold'),
+      options:{ ...CD, elements:{line:{tension:.4},point:{radius:5,hoverRadius:7}},
+        plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}}
+      }
+    }
+  );
+  brandCompChart = new Chart(
+    document.getElementById('brandCompChart').getContext('2d'),
+    { type:'bar', data:buildBrandCompData('GreenGold'),
+      options:{ ...CD, plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}}}
+    }
+  );
+  buildBrandTable();
+}
+function buildBrandLineData(brand) {
+  return { labels:MONTHS.slice(0,4), datasets:[
+    { label:'GIN 2026', data:gin2026[brand].slice(0,4), borderColor:C.gin, backgroundColor:C.ginFill,
+      fill:true, tension:.4, pointRadius:5, borderWidth:2.5, pointBackgroundColor:C.gin },
+    { label:'PL 2026',  data:pl2026[brand].slice(0,4),  borderColor:C.pl,  backgroundColor:C.plFill,
+      fill:true, tension:.4, pointRadius:5, borderWidth:2,   borderDash:[5,4], pointBackgroundColor:C.pl }
+  ]};
+}
+function buildBrandCompData(brand) {
+  return { labels:MONTHS.slice(0,4), datasets:[
+    { label:'2025 GIN', data:gin2025[brand].slice(0,4), backgroundColor:C.ginLt, borderRadius:7, barPercentage:.65 },
+    { label:'2026 GIN', data:gin2026[brand].slice(0,4), backgroundColor:C.gin,   borderRadius:7, barPercentage:.65 }
+  ]};
+}
+function setBrand(brand, el) {
+  document.querySelectorAll('.brand-tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('brandChartTitle').textContent = brand+' — GIN vs PL';
+  document.getElementById('brandCompSub').textContent    = brand+' · GIN · 1~4 月';
+  brandLineChart.data = buildBrandLineData(brand);
+  brandLineChart.update();
+  brandCompChart.data = buildBrandCompData(brand);
+  brandCompChart.update();
+}
+function buildBrandTable() {
+  let html = '';
+  brands.forEach(b => {
+    const g=gin2026[b], p=pl2026[b];
+    html += `<tr>
+      <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${C.brand[b]};margin-right:7px;vertical-align:middle"></span><b>${b}</b> <span style="color:var(--muted);font-weight:400">GIN</span></td>
+      <td>${fmtNTD(g[0])}</td><td>${fmtNTD(g[1])}</td><td>${fmtNTD(g[2])}</td><td>${fmtNTD(g[3])}</td><td><b>${fmtNTD(sum(g))}</b></td>
+    </tr><tr style="color:var(--pl-dk)">
+      <td style="padding-left:22px;font-size:12px">└ PL</td>
+      <td>${fmtNTD(p[0])}</td><td>${fmtNTD(p[1])}</td><td>${fmtNTD(p[2])}</td><td>${fmtNTD(p[3])}</td><td><b>${fmtNTD(sum(p))}</b></td>
+    </tr>`;
+  });
+  const mth=[0,1,2,3].map(i=>brands.reduce((a,b)=>a+gin2026[b][i],0));
+  html += `<tr class="total-row"><td>合計 GIN</td>${mth.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td>${fmtNTD(sum(mth))}</td></tr>`;
+  document.getElementById('brandTableBody').innerHTML = html;
+}
+
+// ─── HISTORY ───
+let histChannel='GIN', histCharts={};
+function initHistory() { renderHistCards(); }
+function switchHistChannel(ch, el) {
+  el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  histChannel=ch;
+  Object.values(histCharts).forEach(c=>c.destroy());
+  histCharts={};
+  renderHistCards();
+}
+function renderHistCards() {
+  const container = document.getElementById('histCards');
+  const d25 = histChannel==='GIN'?gin2025:pl2025;
+  const d26 = histChannel==='GIN'?gin2026:pl2026;
+  container.innerHTML='';
+  brands.forEach(brand => {
+    const t25=sum(d25[brand]), t26=sum(d26[brand]);
+    const yoy=pct(t26,t25), cls=t26>=t25?'pos':'neg';
+    const mom=MONTHS.map((_,i)=>{
+      const a=d26[brand][i],b=d25[brand][i];
+      if(b===0&&a===0) return '<td style="color:var(--muted)">—</td>';
+      const v=pct(a,b);
+      return `<td class="${b===0||a>=b?'pos':'neg'}">${v}</td>`;
+    });
+    const card=document.createElement('div');
+    card.className='card'; card.style.marginBottom='14px';
+    card.innerHTML=`
+      <div class="card-header">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${C.brand[brand]};flex-shrink:0;display:inline-block"></span>
+          <div class="card-title">${brand}</div>
+          <span style="font-size:11px;color:var(--muted)">${histChannel}</span>
+        </div>
+        <span class="pill-badge" style="background:${t26>=t25?'#E4F5EC':'#FDE8E8'};color:${t26>=t25?'#1A7A40':'#C03030'};border:none">${yoy} YOY</span>
+      </div>
+      <div style="overflow-x:auto;margin-bottom:12px">
+        <table class="data-table">
+          <thead><tr><th>年份</th>${MONTHS.map(m=>'<th>'+m+'</th>').join('')}<th>全年</th><th>YOY</th></tr></thead>
+          <tbody>
+            <tr><td>2025</td>${d25[brand].map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td><b>${fmtNTD(t25)}</b></td><td>—</td></tr>
+            <tr><td>2026</td>${d26[brand].map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td><b>${fmtNTD(t26)}</b></td><td class="${cls}">${yoy}</td></tr>
+            <tr class="mom-row"><td>MOM%</td>${mom.join('')}<td>—</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <canvas id="hist_${brand}" height="72"></canvas>`;
+    container.appendChild(card);
+    setTimeout(()=>{
+      histCharts[brand]=new Chart(document.getElementById('hist_'+brand).getContext('2d'),{
+        type:'bar',
+        data:{labels:MONTHS,datasets:[
+          {label:'2025',data:d25[brand],backgroundColor:C.ginLt,borderRadius:5,barPercentage:.72},
+          {label:'2026',data:d26[brand],backgroundColor:C.gin,  borderRadius:5,barPercentage:.72}
+        ]},
+        options:{...CD,plugins:{...CD.plugins,
+          legend:{display:true,labels:{font:{size:11},boxWidth:9,color:'#1C1B2E',padding:12}},
+          tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}
+        }}
+      });
+    },30);
+  });
+}
+
+// ─── MEMBERS ───
+function initMembers() {
+  const m4=['1月','2月','3月','4月'];
+  new Chart(document.getElementById('memberChart').getContext('2d'),{
+    type:'line',
+    data:{labels:m4,datasets:[
+      {label:'PL 折扣碼',data:memberData.plCode,  borderColor:C.pl,   backgroundColor:C.plFill,  fill:true, tension:.4,pointRadius:5,borderWidth:2.5,pointBackgroundColor:C.pl},
+      {label:'PL 社群',  data:memberData.plSocial,borderColor:C.plSocial,backgroundColor:'transparent',fill:false,tension:.4,pointRadius:5,borderWidth:2,borderDash:[5,4],pointBackgroundColor:C.plSocial},
+      {label:'GIN 折扣碼',data:memberData.ginCode,borderColor:C.gold, backgroundColor:'transparent',fill:false,tension:.4,pointRadius:5,borderWidth:2,pointBackgroundColor:C.gold}
+    ]},
+    options:{...CD,plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+ctx.raw.toLocaleString()}}}}
+  });
+  new Chart(document.getElementById('codeBarChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:m4,datasets:[{label:'完成人數',data:memberData.plCodeNew,backgroundColor:C.pl,borderRadius:8,barPercentage:.5}]},
+    options:{...CD}
+  });
+  new Chart(document.getElementById('memberPieChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:['PL 折扣碼','GIN 折扣碼'],datasets:[{data:[1148,322],backgroundColor:[C.pl,C.gold],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'58%',
+      plugins:{legend:{display:true,position:'bottom',labels:{font:{size:12},boxWidth:10,color:'#1C1B2E',padding:14}},
+        tooltip:{backgroundColor:'#fff',titleColor:'#1C1B2E',bodyColor:'#6B6880',borderColor:'#E2DEEF',borderWidth:1,padding:10,cornerRadius:10}
+      }
+    }
+  });
+}
+
+// ─── LINE ───
+function initLine() {
+  // 共用軸設定：左軸從 0 起，stepSize 500
+  const lineScales = {
+    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
+    y: {
+      min: 0,
+      grid: {color:'#EDEBF5'}, border:{display:false},
+      ticks: {
+        font:{size:11}, color:'#9E9AB5',
+        stepSize: 500,
+        callback: v => v >= 1000 ? (v/1000).toFixed(1)+'K' : v
+      }
+    }
+  };
+  const lineTooltipOpts = {
+    backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
+    borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+    callbacks:{ label: ctx => '  '+ctx.dataset.label+': '+ctx.raw.toLocaleString() }
+  };
+
+  // 圖1：LINE 總人數
+  new Chart(document.getElementById('lineChartFriends').getContext('2d'), {
+    type:'line',
+    data:{ labels:lineData.map(d=>d.date), datasets:[{
+      label:'LINE 總人數',
+      data: lineData.map(d=>d.friends),
+      borderColor: C.green, backgroundColor:'rgba(6,199,85,.07)',
+      fill:true, tension:.4, pointRadius:4, pointHoverRadius:6, borderWidth:2.5,
+      pointBackgroundColor: C.green
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} },
+      scales: lineScales
+    }
+  });
+
+  // 圖2：累積封鎖
+  new Chart(document.getElementById('lineChartBlock').getContext('2d'), {
+    type:'line',
+    data:{ labels:lineData.map(d=>d.date), datasets:[{
+      label:'累積封鎖',
+      data: lineData.map(d=>d.cb),
+      borderColor: C.red, backgroundColor:'rgba(224,90,90,.06)',
+      fill:true, tension:.4, pointRadius:4, pointHoverRadius:6, borderWidth:2,
+      borderDash:[5,4], pointBackgroundColor: C.red
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} },
+      scales: lineScales
+    }
+  });
+  document.getElementById('lineTableBody').innerHTML=lineData.map(d=>`<tr>
+    <td>${d.wk?`<span style="background:var(--gin-lt);color:var(--gin-dk);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">${d.wk}</span>`:''}</td>
+    <td>${d.date}</td><td>${d.friends.toLocaleString()}</td>
+    <td>${d.fc}</td><td>${d.cb}</td><td>${d.reg}</td><td>${d.act}</td>
+  </tr>`).join('');
+}
+
+// ─── BOOT ───
+window.addEventListener('DOMContentLoaded', async () => {
+  // 先用本機備份資料畫一次，確保頁面不白屏
+  initOverview(); initBrands(); initHistory(); initMembers(); initLine();
+  // 再從 Sheets 抓最新資料，重繪
+  await loadFromSheets();
+  if(dataLoaded){
+    // 銷毀並重建所有圖表
+    Chart.instances && Object.values(Chart.instances).forEach(c=>c.destroy());
+    initOverview(); initBrands(); initHistory(); initMembers(); initLine();
+    // 更新 sidebar 更新時間
+    const now = new Date();
+    const ts  = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('updateTime').textContent = '更新：'+ts;
+  }
+});
+</script>
+</body>
+</html>
