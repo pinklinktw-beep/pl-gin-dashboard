@@ -300,11 +300,137 @@ svg { display: block; flex-shrink: 0; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-/* ── RESPONSIVE ── */
+/* ══════════════════════════════════
+   RESPONSIVE — TABLET
+══════════════════════════════════ */
 @media (max-width: 1140px) {
   .kpi-grid { grid-template-columns: repeat(2,1fr); }
   .grid-2   { grid-template-columns: 1fr; }
+  .grid-3   { grid-template-columns: 1fr 1fr; }
 }
+
+/* ══════════════════════════════════
+   RESPONSIVE — MOBILE
+   ≤ 768px: hide sidebar, show bottom nav + top header
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  /* hide desktop sidebar entirely */
+  .sidebar { display: none; }
+
+  /* main takes full width, add bottom padding for tab bar */
+  .main {
+    margin-left: 0;
+    max-width: 100vw;
+    padding: 0 0 72px 0;
+  }
+
+  /* ── mobile top header ── */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    background: var(--surface-0);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 12px rgba(90,72,160,.06);
+  }
+  .mobile-header-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, var(--gin-dk) 0%, var(--gin) 100%);
+    color: #fff;
+    padding: 5px 11px 5px 8px;
+    border-radius: 50px;
+  }
+  .mobile-header-logo svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .mobile-header-logo span { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+  .mobile-header-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .mobile-header-badge {
+    font-size: 10px; font-weight: 600;
+    color: var(--muted);
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 3px 9px; border-radius: 20px;
+  }
+
+  /* ── mobile bottom tab bar ── */
+  .mobile-tabbar {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface-0);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(90,72,160,.08);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mobile-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 9px 4px 8px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color .15s;
+    border: none;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-tab svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .mobile-tab.active { color: var(--gin-dk); }
+  .mobile-tab.active svg { stroke: var(--gin-dk); }
+  .mobile-tab-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gin);
+    margin-top: 1px;
+    opacity: 0;
+    transition: opacity .15s;
+  }
+  .mobile-tab.active .mobile-tab-dot { opacity: 1; }
+
+  /* page content padding on mobile */
+  .page { padding: 14px 14px 0; }
+  .page-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .page-title { font-size: 18px; }
+
+  /* kpi + grids */
+  .kpi-grid  { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-2    { grid-template-columns: 1fr; }
+  .grid-3    { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 18px; }
+
+  /* card */
+  .card { padding: 14px 14px; margin-bottom: 12px; }
+  .card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  /* tab-bar pills — allow wrap */
+  .tab-bar { flex-wrap: wrap; border-radius: var(--r-md); }
+
+  /* hide update time text on mobile (shown in header badge) */
+  .sb-footer { display: none; }
+
+  /* brand tags wrap nicely */
+  .brand-tags { gap: 6px; }
+  .brand-tag  { font-size: 11px; padding: 4px 11px; }
+
+  /* tables scroll horizontally */
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 7px 8px; }
+}
+
+/* hide mobile elements on desktop */
+.mobile-header  { display: none; }
+.mobile-tabbar  { display: none; }
 </style>
 </head>
 <style>
@@ -323,6 +449,46 @@ svg { display: block; flex-shrink: 0; }
 .loading-text { font-size: 13px; color: var(--muted); }
 </style>
 <body>
+
+<!-- ══ MOBILE TOP HEADER (hidden on desktop) ══ -->
+<div class="mobile-header" id="mobileHeader">
+  <div class="mobile-header-logo">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    <span>PL × GIN</span>
+  </div>
+  <div class="mobile-header-title" id="mobilePageTitle">總覽</div>
+  <div class="mobile-header-badge" id="mobileUpdateBadge">載入中…</div>
+</div>
+
+<!-- ══ MOBILE BOTTOM TAB BAR (hidden on desktop) ══ -->
+<nav class="mobile-tabbar">
+  <button class="mobile-tab active" onclick="showPage('overview',this)" data-label="總覽">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    總覽
+    <div class="mobile-tab-dot"></div>
+  </button>
+  <button class="mobile-tab" onclick="showPage('brands',this)" data-label="品牌業績">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    品牌
+    <div class="mobile-tab-dot"></div>
+  </button>
+  <button class="mobile-tab" onclick="showPage('history',this)" data-label="歷年對比">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+    歷年
+    <div class="mobile-tab-dot"></div>
+  </button>
+  <button class="mobile-tab" onclick="showPage('members',this)" data-label="會員人數">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    會員
+    <div class="mobile-tab-dot"></div>
+  </button>
+  <button class="mobile-tab" onclick="showPage('line',this)" data-label="官方LINE">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    LINE
+    <div class="mobile-tab-dot"></div>
+  </button>
+</nav>
+
 <div id="loadingOverlay">
   <div class="sb-logo-pill" style="margin:0">
     <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -904,6 +1070,8 @@ async function loadFromSheets() {
   } catch(e) {
     console.warn('Sheets 讀取失敗，使用本機備份資料', e);
     document.getElementById('loadingOverlay').style.display='none';
+    const mb = document.getElementById('mobileUpdateBadge');
+    if(mb) mb.textContent = '備用資料';
   }
 }
 
@@ -1032,8 +1200,20 @@ const CD = {
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  el.classList.add('active');
+  // 更新 sidebar nav（桌機）
+  const sidebarItem = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
+  if(sidebarItem) sidebarItem.classList.add('active');
+  // 更新 mobile tab（手機）
+  const mobileTab = document.querySelector(`.mobile-tab[onclick*="'${id}'"]`);
+  if(mobileTab) mobileTab.classList.add('active');
+  // 更新手機頂部標題
+  const label = el.dataset.label || el.textContent.trim();
+  const titleEl = document.getElementById('mobilePageTitle');
+  if(titleEl) titleEl.textContent = label;
+  // 捲回頂部
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ─── OVERVIEW ───
@@ -1417,6 +1597,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     const now = new Date();
     const ts  = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     document.getElementById('updateTime').textContent = '更新：'+ts;
+    const mb = document.getElementById('mobileUpdateBadge');
+    if(mb) mb.textContent = ts.slice(5); // 顯示 MM/DD HH:mm
   }
 });
 </script>
