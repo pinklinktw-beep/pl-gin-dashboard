@@ -486,12 +486,28 @@ svg { display: block; flex-shrink: 0; }
   <div class="card">
     <div class="card-header">
       <div>
-        <div class="card-title">4 月 週次業績進度</div>
-        <div class="card-sub">W1 (4/1–4/5) · W2 (4/6–4/12) 已填入</div>
+        <div class="card-title" id="weekChartTitle">4 月 週次業績進度</div>
+        <div class="card-sub" id="weekChartSub">W1 (4/1–4/5) · W2 (4/6–4/12) 已填入</div>
       </div>
-      <div class="legend">
-        <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>GIN</span>
-        <span class="leg"><span class="leg-dot" style="background:var(--pl)"></span>PL</span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="legend">
+          <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>GIN</span>
+          <span class="leg"><span class="leg-dot" style="background:var(--pl)"></span>PL</span>
+        </div>
+        <div class="tab-bar" id="weekMonthTabs" style="gap:3px">
+          <button class="tab-btn" onclick="switchWeekMonth(1,this)">1月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(2,this)">2月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(3,this)">3月</button>
+          <button class="tab-btn active" onclick="switchWeekMonth(4,this)">4月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(5,this)">5月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(6,this)">6月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(7,this)">7月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(8,this)">8月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(9,this)">9月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(10,this)">10月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(11,this)">11月</button>
+          <button class="tab-btn" onclick="switchWeekMonth(12,this)">12月</button>
+        </div>
       </div>
     </div>
     <canvas id="weekBarChart" height="100"></canvas>
@@ -549,7 +565,7 @@ svg { display: block; flex-shrink: 0; }
     <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
     <div style="overflow-x:auto">
       <table class="data-table">
-        <thead><tr><th>品牌 / 通路</th><th>1 月</th><th>2 月</th><th>3 月</th><th>4 月</th><th>合計</th></tr></thead>
+        <thead><tr><th>品牌 / 通路</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>全年合計</th></tr></thead>
         <tbody id="brandTableBody"></tbody>
       </table>
     </div>
@@ -650,6 +666,20 @@ svg { display: block; flex-shrink: 0; }
       <div class="page-title">官方 LINE@ 每日數字</div>
       <div class="page-sub">總人數 = 當日快照 · 其餘 = 當日新增</div>
     </div>
+    <div class="tab-bar" id="lineMonthTabs" style="flex-wrap:wrap;gap:4px">
+      <button class="tab-btn" onclick="switchLineMonth(1,this)">1月</button>
+      <button class="tab-btn" onclick="switchLineMonth(2,this)">2月</button>
+      <button class="tab-btn" onclick="switchLineMonth(3,this)">3月</button>
+      <button class="tab-btn active" onclick="switchLineMonth(4,this)">4月</button>
+      <button class="tab-btn" onclick="switchLineMonth(5,this)">5月</button>
+      <button class="tab-btn" onclick="switchLineMonth(6,this)">6月</button>
+      <button class="tab-btn" onclick="switchLineMonth(7,this)">7月</button>
+      <button class="tab-btn" onclick="switchLineMonth(8,this)">8月</button>
+      <button class="tab-btn" onclick="switchLineMonth(9,this)">9月</button>
+      <button class="tab-btn" onclick="switchLineMonth(10,this)">10月</button>
+      <button class="tab-btn" onclick="switchLineMonth(11,this)">11月</button>
+      <button class="tab-btn" onclick="switchLineMonth(12,this)">12月</button>
+    </div>
   </div>
 
   <div class="kpi-grid">
@@ -658,55 +688,55 @@ svg { display: block; flex-shrink: 0; }
       <div class="kpi-icon" style="background:#D4F5E2;color:#0A7A3A">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       </div>
-      <div class="kpi-label">LINE 總人數（4/16）</div>
-      <div class="kpi-value" style="color:#0A7A3A">2,644</div>
-      <div class="kpi-delta up"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>+109 vs 4/1</div>
+      <div class="kpi-label" id="lineKpi1Label">LINE 總人數（月末）</div>
+      <div class="kpi-value" style="color:#0A7A3A" id="lineKpi1Val">—</div>
+      <div class="kpi-delta" id="lineKpi1Delta">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--gin)"></div>
       <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
         <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
-      <div class="kpi-label">首次開啟 累計（4 月）</div>
-      <div class="kpi-value">50</div>
-      <div class="kpi-delta neu">4/1 ~ 4/16</div>
+      <div class="kpi-label" id="lineKpi2Label">首次開啟 累計</div>
+      <div class="kpi-value" id="lineKpi2Val">—</div>
+      <div class="kpi-delta neu" id="lineKpi2Delta">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--dn)"></div>
       <div class="kpi-icon" style="background:#FDEAEA;color:var(--dn)">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
       </div>
-      <div class="kpi-label">累積封鎖數（4/16）</div>
-      <div class="kpi-value" style="color:var(--dn)">499</div>
-      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>+23 vs 4/1</div>
+      <div class="kpi-label" id="lineKpi3Label">累積封鎖數（月末）</div>
+      <div class="kpi-value" style="color:var(--dn)" id="lineKpi3Val">—</div>
+      <div class="kpi-delta" id="lineKpi3Delta">—</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--up)"></div>
       <div class="kpi-icon" style="background:#DFF5EB;color:#1A8A50">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <div class="kpi-label">當月開通 CODE（4 月）</div>
-      <div class="kpi-value" style="color:#1A8A50">25</div>
-      <div class="kpi-delta neu">4/1 ~ 4/16</div>
+      <div class="kpi-label" id="lineKpi4Label">當月開通 CODE</div>
+      <div class="kpi-value" style="color:#1A8A50" id="lineKpi4Val">—</div>
+      <div class="kpi-delta neu" id="lineKpi4Delta">—</div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">LINE 總人數 日趨勢（4 月）</div>
+      <div class="card-title" id="lineFriendsTitle">LINE 總人數 日趨勢</div>
     </div>
     <canvas id="lineChartFriends" height="120"></canvas>
   </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title">累積封鎖數 日趨勢（4 月）</div>
+      <div class="card-title" id="lineBlockTitle">累積封鎖數 日趨勢</div>
     </div>
     <canvas id="lineChartBlock" height="100"></canvas>
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="card-title">4 月 每日明細</div></div>
+    <div class="card-header"><div class="card-title" id="lineTableTitle">每日明細</div></div>
     <div style="overflow-x:auto">
       <table class="data-table">
         <thead><tr><th>週次</th><th>日期</th><th>LINE 總人數</th><th>首次開啟</th><th>累積封鎖</th><th>完成 CODE</th><th>當日開通</th></tr></thead>
@@ -808,33 +838,61 @@ async function loadFromSheets() {
       plMonthly[i]  = bs.reduce((a,b)=>a+pl2026[b][i],0);
     }
 
-    // ── 區塊2：會員人數 (section=member, metric, m1~m4)
+    // ── 區塊2：會員人數 (section=member, brand=metric, m1~m12)
     const memberRows = parseTable(rows.filter(r => r[0]==='member'));
     memberRows.forEach(r => {
-      const vals = [1,2,3,4].map(i => n(r['m'+i]));
-      if (r['metric']==='plCode')    memberData.plCode   = vals;
-      if (r['metric']==='plSocial')  memberData.plSocial = vals;
-      if (r['metric']==='ginCode')   memberData.ginCode  = vals;
-      if (r['metric']==='plCodeNew') memberData.plCodeNew= vals;
+      const key = r['brand'] || r['metric'] || r['channel_or_metric'] || '';
+      const vals = [1,2,3,4,5,6,7,8,9,10,11,12].map(i => n(r['m'+i]));
+      if (key==='plCode')    memberData.plCode    = vals;
+      if (key==='plSocial')  memberData.plSocial  = vals;
+      if (key==='ginCode')   memberData.ginCode   = vals;
+      if (key==='plCodeNew') memberData.plCodeNew = vals;
     });
 
-    // ── 區塊3：官方LINE (section=line, date, wk, friends, fc, cb, reg, act)
-    const lineRows = parseTable(rows.filter(r => r[0]==='line'));
-    if(lineRows.length > 0){
-      lineData.length = 0;
-      lineRows.forEach(r => lineData.push({
-        wk: r['wk']||'', date: r['date'],
-        friends: n(r['friends']), fc: n(r['fc']),
-        cb: n(r['cb']), reg: n(r['reg']), act: n(r['act'])
-      }));
+    // ── 區塊3：官方LINE 日報 (section=line)
+    // CSV 格式：section=line 的第一列為 header（section,wk,date,friends,fc,cb,reg,act）
+    // 之後每列為一天。date 欄格式 M/D，從 date 反推月份，存入 ALL_LINE_DATA[month]
+    const lineRaw = rows.filter(r => r[0]==='line');
+    if(lineRaw.length > 0){
+      // 清空所有月份的舊備份資料
+      [4,5,6,7,8,9,10,11,12].forEach(m => ALL_LINE_DATA[m]=[]);
+      lineRaw.forEach(r => {
+        if(!r[3] || r[3]==='friends') return; // 跳過 header 行或空行
+        const dateParts = (r[2]||'').split('/');
+        const month = parseInt(dateParts[0]) || currentLineMonth;
+        if(!ALL_LINE_DATA[month]) ALL_LINE_DATA[month]=[];
+        ALL_LINE_DATA[month].push({
+          wk: r[1]||'', date: r[2]||'',
+          friends: n(r[3]), fc: n(r[4]),
+          cb: n(r[5]), reg: n(r[6]), act: n(r[7])
+        });
+      });
     }
 
-    // ── 區塊4：4月週次 (section=week, label, gin, pl)
-    const weekRows = parseTable(rows.filter(r => r[0]==='week'));
-    if(weekRows.length > 0){
-      weekRows.forEach((r,i) => {
-        if(i<weekGIN.length){ weekGIN[i]=n(r['gin']); weekPL[i]=n(r['pl']); }
-      });
+    // ── 區塊4：週次業績 (section=week, label, gin, pl)
+    // CSV header row: section,wk,date,... — 跳過；資料行第二欄=W1~W5
+    // 月份從 date 欄的 M/D 反推（取第一筆的月份即可）
+    const weekRaw = rows.filter(r => r[0]==='week');
+    if(weekRaw.length > 0){
+      // 找出這批資料屬於哪個月（從 label 欄的日期判斷，例如 "W1  4/1–5"）
+      const firstLabel = weekRaw[0][1] || '';
+      const mMatch = firstLabel.match(/(\d+)\//);
+      const wMonth = mMatch ? parseInt(mMatch[1]) : currentWeekMonth;
+      const wd = ALL_WEEK_DATA[wMonth];
+      if(wd){
+        weekRaw.forEach((r,i) => {
+          if(i < wd.gin.length){
+            wd.gin[i] = n(r[2]);
+            wd.pl[i]  = n(r[3]);
+          }
+        });
+        wd.filled = `從 Sheets 更新`;
+        // 若目前顯示的就是這個月，同步 weekGIN/weekPL
+        if(wMonth === currentWeekMonth){
+          wd.gin.forEach((v,i) => { weekGIN[i]=v; weekPL[i]=v; });
+          wd.pl.forEach((v,i)  => { weekPL[i]=v; });
+        }
+      }
     }
 
     document.getElementById('loadingBar').style.width = '100%';
@@ -887,34 +945,60 @@ const ginMonthly = [4985901,4057656,903784,404515,0,0,0,0,0,0,0,0];
 const plMonthly  = [717929,661621,143092,84323,0,0,0,0,0,0,0,0];
 
 const memberData = {
-  plCode:   [1128,1136,1148,1148],
-  plSocial: [976,964,942,938],
-  ginCode:  [438,439,321,322],
-  plCodeNew:[3,8,12,3]
+  plCode:   [1128,1136,1148,1148,0,0,0,0,0,0,0,0],
+  plSocial: [976,964,942,938,0,0,0,0,0,0,0,0],
+  ginCode:  [438,439,321,322,0,0,0,0,0,0,0,0],
+  plCodeNew:[3,8,12,3,0,0,0,0,0,0,0,0]
 };
 
-const lineData = [
-  {wk:'W1',date:'4/1',  friends:2535,fc:3, cb:476,reg:1, act:1},
-  {wk:'',  date:'4/2',  friends:2535,fc:1, cb:479,reg:0, act:0},
-  {wk:'',  date:'4/3',  friends:2535,fc:1, cb:480,reg:0, act:0},
-  {wk:'',  date:'4/4',  friends:2536,fc:0, cb:483,reg:0, act:0},
-  {wk:'',  date:'4/5',  friends:2536,fc:0, cb:484,reg:0, act:0},
-  {wk:'W2',date:'4/6',  friends:2537,fc:0, cb:484,reg:1, act:0},
-  {wk:'',  date:'4/7',  friends:2537,fc:0, cb:486,reg:1, act:1},
-  {wk:'',  date:'4/8',  friends:2541,fc:2, cb:486,reg:0, act:0},
-  {wk:'',  date:'4/9',  friends:2560,fc:9, cb:485,reg:2, act:0},
-  {wk:'',  date:'4/10', friends:2574,fc:2, cb:484,reg:2, act:1},
-  {wk:'',  date:'4/11', friends:2576,fc:0, cb:484,reg:0, act:0},
-  {wk:'',  date:'4/12', friends:2577,fc:0, cb:485,reg:0, act:0},
-  {wk:'W3',date:'4/13', friends:2579,fc:0, cb:486,reg:1, act:0},
-  {wk:'',  date:'4/14', friends:2598,fc:10,cb:489,reg:10,act:1},
-  {wk:'',  date:'4/15', friends:2630,fc:16,cb:497,reg:27,act:10},
-  {wk:'',  date:'4/16', friends:2644,fc:6, cb:499,reg:3, act:11},
-];
+// LINE 日報：按月份存放。每月由 _Dashboard sheet 的 line 區塊載入，
+// 未載入的月份預設空陣列（頁面顯示「尚無資料」）
+const ALL_LINE_DATA = {
+  1:[],2:[],3:[],
+  4:[
+    {wk:'W1',date:'4/1',  friends:2535,fc:3, cb:476,reg:1, act:1},
+    {wk:'',  date:'4/2',  friends:2535,fc:1, cb:479,reg:0, act:0},
+    {wk:'',  date:'4/3',  friends:2535,fc:1, cb:480,reg:0, act:0},
+    {wk:'',  date:'4/4',  friends:2536,fc:0, cb:483,reg:0, act:0},
+    {wk:'',  date:'4/5',  friends:2536,fc:0, cb:484,reg:0, act:0},
+    {wk:'W2',date:'4/6',  friends:2537,fc:0, cb:484,reg:1, act:0},
+    {wk:'',  date:'4/7',  friends:2537,fc:0, cb:486,reg:1, act:1},
+    {wk:'',  date:'4/8',  friends:2541,fc:2, cb:486,reg:0, act:0},
+    {wk:'',  date:'4/9',  friends:2560,fc:9, cb:485,reg:2, act:0},
+    {wk:'',  date:'4/10', friends:2574,fc:2, cb:484,reg:2, act:1},
+    {wk:'',  date:'4/11', friends:2576,fc:0, cb:484,reg:0, act:0},
+    {wk:'',  date:'4/12', friends:2577,fc:0, cb:485,reg:0, act:0},
+    {wk:'W3',date:'4/13', friends:2579,fc:0, cb:486,reg:1, act:0},
+    {wk:'',  date:'4/14', friends:2598,fc:10,cb:489,reg:10,act:1},
+    {wk:'',  date:'4/15', friends:2630,fc:16,cb:497,reg:27,act:10},
+    {wk:'',  date:'4/16', friends:2644,fc:6, cb:499,reg:3, act:11},
+  ],
+  5:[],6:[],7:[],8:[],9:[],10:[],11:[],12:[]
+};
+let currentLineMonth = 4;
+// 向後相容：舊的 lineData 指向目前月份（Sheets 載入時會更新 ALL_LINE_DATA[month]）
+const lineData = ALL_LINE_DATA[4];
 
-const weekGIN    = [97687,306828,0,0,0];
-const weekPL     = [32607,51716,0,0,0];
-const weekLabels = ['W1  4/1–5','W2  4/6–12','W3  4/13–19','W4  4/20–26','W5  4/27–30'];
+// 週次業績：按月份存放，Sheets 僅提供當月，其他月預設空
+const ALL_WEEK_DATA = {
+  1: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  2: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  3: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  4: { gin:[97687,306828,0,0,0], pl:[32607,51716,0,0,0],
+       labels:['W1 4/1–5','W2 4/6–12','W3 4/13–19','W4 4/20–26','W5 4/27–30'], filled:'W1、W2 已填入' },
+  5: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  6: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  7: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  8: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  9: { gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  10:{ gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  11:{ gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+  12:{ gin:[0,0,0,0,0], pl:[0,0,0,0,0], labels:['W1','W2','W3','W4','W5'], filled:'尚無資料' },
+};
+let currentWeekMonth = 4;
+const weekGIN    = [...ALL_WEEK_DATA[4].gin];
+const weekPL     = [...ALL_WEEK_DATA[4].pl];
+const weekLabels = [...ALL_WEEK_DATA[4].labels];
 
 // ─── HELPERS ───
 const fmt    = n => n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n);
@@ -974,8 +1058,8 @@ function initOverview() {
     }
   });
 
-  // GIN 圓餅
-  const ginVals  = brands.map(b=>sum(gin2026[b].slice(0,4)));
+  // GIN 圓餅（全年加總）
+  const ginVals  = brands.map(b=>sum(gin2026[b]));
   const ginTotal = sum(ginVals);
   new Chart(document.getElementById('ovPieGIN').getContext('2d'), {
     type:'doughnut',
@@ -986,8 +1070,8 @@ function initOverview() {
     options: makePieOpts(ginTotal)
   });
 
-  // PL 圓餅
-  const plVals  = brands.map(b=>sum(pl2026[b].slice(0,4)));
+  // PL 圓餅（全年加總）
+  const plVals  = brands.map(b=>sum(pl2026[b]));
   const plTotal = sum(plVals);
   new Chart(document.getElementById('ovPiePL').getContext('2d'), {
     type:'doughnut',
@@ -998,7 +1082,7 @@ function initOverview() {
     options: makePieOpts(plTotal)
   });
   // Week bar
-  new Chart(document.getElementById('weekBarChart').getContext('2d'), {
+  weekBarChartInst = new Chart(document.getElementById('weekBarChart').getContext('2d'), {
     type:'bar',
     data:{ labels:weekLabels, datasets:[
       {label:'GIN',data:weekGIN,backgroundColor:C.gin,borderRadius:8,barPercentage:.55},
@@ -1048,24 +1132,24 @@ function initBrands() {
   buildBrandTable();
 }
 function buildBrandLineData(brand) {
-  return { labels:MONTHS.slice(0,4), datasets:[
-    { label:'GIN 2026', data:gin2026[brand].slice(0,4), borderColor:C.gin, backgroundColor:C.ginFill,
-      fill:true, tension:.4, pointRadius:5, borderWidth:2.5, pointBackgroundColor:C.gin },
-    { label:'PL 2026',  data:pl2026[brand].slice(0,4),  borderColor:C.pl,  backgroundColor:C.plFill,
-      fill:true, tension:.4, pointRadius:5, borderWidth:2,   borderDash:[5,4], pointBackgroundColor:C.pl }
+  return { labels:MONTHS, datasets:[
+    { label:'GIN 2026', data:gin2026[brand], borderColor:C.gin, backgroundColor:C.ginFill,
+      fill:true, tension:.4, pointRadius:4, borderWidth:2.5, pointBackgroundColor:C.gin },
+    { label:'PL 2026',  data:pl2026[brand],  borderColor:C.pl,  backgroundColor:C.plFill,
+      fill:true, tension:.4, pointRadius:4, borderWidth:2, borderDash:[5,4], pointBackgroundColor:C.pl }
   ]};
 }
 function buildBrandCompData(brand) {
-  return { labels:MONTHS.slice(0,4), datasets:[
-    { label:'2025 GIN', data:gin2025[brand].slice(0,4), backgroundColor:C.ginLt, borderRadius:7, barPercentage:.65 },
-    { label:'2026 GIN', data:gin2026[brand].slice(0,4), backgroundColor:C.gin,   borderRadius:7, barPercentage:.65 }
+  return { labels:MONTHS, datasets:[
+    { label:'2025 GIN', data:gin2025[brand], backgroundColor:C.ginLt, borderRadius:7, barPercentage:.65 },
+    { label:'2026 GIN', data:gin2026[brand], backgroundColor:C.gin,   borderRadius:7, barPercentage:.65 }
   ]};
 }
 function setBrand(brand, el) {
   document.querySelectorAll('.brand-tag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('brandChartTitle').textContent = brand+' — GIN vs PL';
-  document.getElementById('brandCompSub').textContent    = brand+' · GIN · 1~4 月';
+  document.getElementById('brandCompSub').textContent    = brand+' · GIN · 全年';
   brandLineChart.data = buildBrandLineData(brand);
   brandLineChart.update();
   brandCompChart.data = buildBrandCompData(brand);
@@ -1077,13 +1161,13 @@ function buildBrandTable() {
     const g=gin2026[b], p=pl2026[b];
     html += `<tr>
       <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${C.brand[b]};margin-right:7px;vertical-align:middle"></span><b>${b}</b> <span style="color:var(--muted);font-weight:400">GIN</span></td>
-      <td>${fmtNTD(g[0])}</td><td>${fmtNTD(g[1])}</td><td>${fmtNTD(g[2])}</td><td>${fmtNTD(g[3])}</td><td><b>${fmtNTD(sum(g))}</b></td>
+      ${g.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td><b>${fmtNTD(sum(g))}</b></td>
     </tr><tr style="color:var(--pl-dk)">
       <td style="padding-left:22px;font-size:12px">└ PL</td>
-      <td>${fmtNTD(p[0])}</td><td>${fmtNTD(p[1])}</td><td>${fmtNTD(p[2])}</td><td>${fmtNTD(p[3])}</td><td><b>${fmtNTD(sum(p))}</b></td>
+      ${p.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td><b>${fmtNTD(sum(p))}</b></td>
     </tr>`;
   });
-  const mth=[0,1,2,3].map(i=>brands.reduce((a,b)=>a+gin2026[b][i],0));
+  const mth=MONTHS.map((_,i)=>brands.reduce((a,b)=>a+gin2026[b][i],0));
   html += `<tr class="total-row"><td>合計 GIN</td>${mth.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td>${fmtNTD(sum(mth))}</td></tr>`;
   document.getElementById('brandTableBody').innerHTML = html;
 }
@@ -1154,24 +1238,28 @@ function renderHistCards() {
 
 // ─── MEMBERS ───
 function initMembers() {
-  const m4=['1月','2月','3月','4月'];
+  const lastIdx = memberData.plCode.reduce((last,v,i)=>v>0?i:last, 0);
+  // 只顯示有資料的月份（過濾掉後面的 0）
+  const hasData = (arr) => arr.filter(v=>v>0).length;
+  const validMonths = MONTHS.slice(0, Math.max(hasData(memberData.plCode), hasData(memberData.ginCode), 1));
+  const sliceTo = validMonths.length;
   new Chart(document.getElementById('memberChart').getContext('2d'),{
     type:'line',
-    data:{labels:m4,datasets:[
-      {label:'PL 折扣碼',data:memberData.plCode,  borderColor:C.pl,   backgroundColor:C.plFill,  fill:true, tension:.4,pointRadius:5,borderWidth:2.5,pointBackgroundColor:C.pl},
-      {label:'PL 社群',  data:memberData.plSocial,borderColor:C.plSocial,backgroundColor:'transparent',fill:false,tension:.4,pointRadius:5,borderWidth:2,borderDash:[5,4],pointBackgroundColor:C.plSocial},
-      {label:'GIN 折扣碼',data:memberData.ginCode,borderColor:C.gold, backgroundColor:'transparent',fill:false,tension:.4,pointRadius:5,borderWidth:2,pointBackgroundColor:C.gold}
+    data:{labels:MONTHS.slice(0,sliceTo),datasets:[
+      {label:'PL 折扣碼',data:memberData.plCode.slice(0,sliceTo),  borderColor:C.pl,   backgroundColor:C.plFill,  fill:true, tension:.4,pointRadius:4,borderWidth:2.5,pointBackgroundColor:C.pl},
+      {label:'PL 社群',  data:memberData.plSocial.slice(0,sliceTo),borderColor:C.plSocial,backgroundColor:'transparent',fill:false,tension:.4,pointRadius:4,borderWidth:2,borderDash:[5,4],pointBackgroundColor:C.plSocial},
+      {label:'GIN 折扣碼',data:memberData.ginCode.slice(0,sliceTo),borderColor:C.gold, backgroundColor:'transparent',fill:false,tension:.4,pointRadius:4,borderWidth:2,pointBackgroundColor:C.gold}
     ]},
     options:{...CD,plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+ctx.raw.toLocaleString()}}}}
   });
   new Chart(document.getElementById('codeBarChart').getContext('2d'),{
     type:'bar',
-    data:{labels:m4,datasets:[{label:'完成人數',data:memberData.plCodeNew,backgroundColor:C.pl,borderRadius:8,barPercentage:.5}]},
+    data:{labels:MONTHS.slice(0,sliceTo),datasets:[{label:'完成人數',data:memberData.plCodeNew.slice(0,sliceTo),backgroundColor:C.pl,borderRadius:8,barPercentage:.5}]},
     options:{...CD}
   });
   new Chart(document.getElementById('memberPieChart').getContext('2d'),{
     type:'doughnut',
-    data:{labels:['PL 折扣碼','GIN 折扣碼'],datasets:[{data:[1148,322],backgroundColor:[C.pl,C.gold],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    data:{labels:['PL 折扣碼','GIN 折扣碼'],datasets:[{data:[memberData.plCode[lastIdx],memberData.ginCode[lastIdx]],backgroundColor:[C.pl,C.gold],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
     options:{responsive:true,maintainAspectRatio:true,cutout:'58%',
       plugins:{legend:{display:true,position:'bottom',labels:{font:{size:12},boxWidth:10,color:'#1C1B2E',padding:14}},
         tooltip:{backgroundColor:'#fff',titleColor:'#1C1B2E',bodyColor:'#6B6880',borderColor:'#E2DEEF',borderWidth:1,padding:10,cornerRadius:10}
@@ -1181,64 +1269,136 @@ function initMembers() {
 }
 
 // ─── LINE ───
-function initLine() {
-  // 共用軸設定：左軸從 0 起，stepSize 500
+let lineFriendsChart = null, lineBlockChart = null;
+
+const lineTooltipOpts = {
+  backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
+  borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+  callbacks:{ label: ctx => '  '+ctx.dataset.label+': '+ctx.raw.toLocaleString() }
+};
+
+function renderLineCharts(month) {
+  const data = ALL_LINE_DATA[month] || [];
+  const mLabel = MONTHS[month-1];
+
+  document.getElementById('lineFriendsTitle').textContent = `LINE 總人數 日趨勢（${mLabel}）`;
+  document.getElementById('lineBlockTitle').textContent   = `累積封鎖數 日趨勢（${mLabel}）`;
+  document.getElementById('lineTableTitle').textContent   = `${mLabel} 每日明細`;
+
+  if(lineFriendsChart){ lineFriendsChart.destroy(); lineFriendsChart=null; }
+  if(lineBlockChart  ){ lineBlockChart.destroy();   lineBlockChart=null;   }
+
+  if(data.length === 0) {
+    document.getElementById('lineTableBody').innerHTML =
+      `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">${mLabel} 尚無資料</td></tr>`;
+    updateLineKPI(data, month);
+    return;
+  }
+
+  const friendsMax = Math.max(...data.map(d=>d.friends));
+  const step = friendsMax > 5000 ? 1000 : 500;
   const lineScales = {
     x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
-    y: {
-      min: 0,
-      grid: {color:'#EDEBF5'}, border:{display:false},
-      ticks: {
-        font:{size:11}, color:'#9E9AB5',
-        stepSize: 500,
-        callback: v => v >= 1000 ? (v/1000).toFixed(1)+'K' : v
-      }
-    }
+    y: { min:0, grid:{color:'#EDEBF5'}, border:{display:false},
+         ticks:{font:{size:11},color:'#9E9AB5',stepSize:step,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
   };
-  const lineTooltipOpts = {
-    backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
-    borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
-    callbacks:{ label: ctx => '  '+ctx.dataset.label+': '+ctx.raw.toLocaleString() }
+  const blockScales = {
+    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
+    y: { min:0, grid:{color:'#EDEBF5'}, border:{display:false},
+         ticks:{font:{size:11},color:'#9E9AB5',stepSize:100,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
   };
+  const labels = data.map(d=>d.date);
 
-  // 圖1：LINE 總人數
-  new Chart(document.getElementById('lineChartFriends').getContext('2d'), {
+  lineFriendsChart = new Chart(document.getElementById('lineChartFriends').getContext('2d'), {
     type:'line',
-    data:{ labels:lineData.map(d=>d.date), datasets:[{
-      label:'LINE 總人數',
-      data: lineData.map(d=>d.friends),
-      borderColor: C.green, backgroundColor:'rgba(6,199,85,.07)',
-      fill:true, tension:.4, pointRadius:4, pointHoverRadius:6, borderWidth:2.5,
-      pointBackgroundColor: C.green
-    }]},
-    options:{
-      responsive:true, maintainAspectRatio:true,
-      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} },
-      scales: lineScales
-    }
+    data:{ labels, datasets:[{ label:'LINE 總人數', data:data.map(d=>d.friends),
+      borderColor:C.green, backgroundColor:'rgba(6,199,85,.07)',
+      fill:true, tension:.4, pointRadius:3, pointHoverRadius:6, borderWidth:2.5, pointBackgroundColor:C.green }]},
+    options:{ responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} }, scales:lineScales }
   });
 
-  // 圖2：累積封鎖
-  new Chart(document.getElementById('lineChartBlock').getContext('2d'), {
+  lineBlockChart = new Chart(document.getElementById('lineChartBlock').getContext('2d'), {
     type:'line',
-    data:{ labels:lineData.map(d=>d.date), datasets:[{
-      label:'累積封鎖',
-      data: lineData.map(d=>d.cb),
-      borderColor: C.red, backgroundColor:'rgba(224,90,90,.06)',
-      fill:true, tension:.4, pointRadius:4, pointHoverRadius:6, borderWidth:2,
-      borderDash:[5,4], pointBackgroundColor: C.red
-    }]},
-    options:{
-      responsive:true, maintainAspectRatio:true,
-      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} },
-      scales: lineScales
-    }
+    data:{ labels, datasets:[{ label:'累積封鎖', data:data.map(d=>d.cb),
+      borderColor:C.red, backgroundColor:'rgba(224,90,90,.06)',
+      fill:true, tension:.4, pointRadius:3, pointHoverRadius:6, borderWidth:2,
+      borderDash:[5,4], pointBackgroundColor:C.red }]},
+    options:{ responsive:true, maintainAspectRatio:true,
+      plugins:{ legend:{display:false}, tooltip:{...lineTooltipOpts} }, scales:blockScales }
   });
-  document.getElementById('lineTableBody').innerHTML=lineData.map(d=>`<tr>
+
+  document.getElementById('lineTableBody').innerHTML = data.map(d=>`<tr>
     <td>${d.wk?`<span style="background:var(--gin-lt);color:var(--gin-dk);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">${d.wk}</span>`:''}</td>
     <td>${d.date}</td><td>${d.friends.toLocaleString()}</td>
     <td>${d.fc}</td><td>${d.cb}</td><td>${d.reg}</td><td>${d.act}</td>
   </tr>`).join('');
+
+  updateLineKPI(data, month);
+}
+
+function updateLineKPI(data, month) {
+  const mLabel = MONTHS[month-1];
+  if(data.length === 0) {
+    ['lineKpi1Label','lineKpi2Label','lineKpi3Label','lineKpi4Label'].forEach((id,i)=>{
+      document.getElementById(id).textContent = ['LINE 總人數','首次開啟 累計','累積封鎖數','當月開通 CODE'][i]+`（${mLabel} 無資料）`;
+    });
+    ['lineKpi1Val','lineKpi2Val','lineKpi3Val','lineKpi4Val'].forEach(id=>document.getElementById(id).textContent='—');
+    ['lineKpi1Delta','lineKpi2Delta','lineKpi3Delta','lineKpi4Delta'].forEach(id=>{ document.getElementById(id).textContent='尚無資料'; document.getElementById(id).className='kpi-delta neu'; });
+    return;
+  }
+  const first=data[0], last=data[data.length-1];
+  const totalFc=data.reduce((a,d)=>a+d.fc,0), totalAct=data.reduce((a,d)=>a+d.act,0);
+  const fd=last.friends-first.friends, cd=last.cb-first.cb;
+
+  document.getElementById('lineKpi1Label').textContent = `LINE 總人數（${last.date}）`;
+  document.getElementById('lineKpi1Val').textContent   = last.friends.toLocaleString();
+  const d1=document.getElementById('lineKpi1Delta');
+  d1.className=`kpi-delta ${fd>=0?'up':'dn'}`;
+  d1.innerHTML=`${fd>=0?'<svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>':'<svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>'}${fd>=0?'+':''}${fd} vs ${first.date}`;
+
+  document.getElementById('lineKpi2Label').textContent = `首次開啟 累計（${mLabel}）`;
+  document.getElementById('lineKpi2Val').textContent   = totalFc.toLocaleString();
+  document.getElementById('lineKpi2Delta').textContent = `${first.date} ~ ${last.date}`;
+  document.getElementById('lineKpi2Delta').className   = 'kpi-delta neu';
+
+  document.getElementById('lineKpi3Label').textContent = `累積封鎖數（${last.date}）`;
+  document.getElementById('lineKpi3Val').textContent   = last.cb.toLocaleString();
+  const d3=document.getElementById('lineKpi3Delta');
+  d3.className=`kpi-delta ${cd>0?'dn':'up'}`;
+  d3.innerHTML=`${cd>0?'<svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>':'<svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>'}${cd>=0?'+':''}${cd} vs ${first.date}`;
+
+  document.getElementById('lineKpi4Label').textContent = `當月開通 CODE（${mLabel}）`;
+  document.getElementById('lineKpi4Val').textContent   = totalAct.toLocaleString();
+  document.getElementById('lineKpi4Delta').textContent = `${first.date} ~ ${last.date}`;
+  document.getElementById('lineKpi4Delta').className   = 'kpi-delta neu';
+}
+
+function switchLineMonth(month, el) {
+  document.querySelectorAll('#lineMonthTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  currentLineMonth = month;
+  renderLineCharts(month);
+}
+
+function initLine() { renderLineCharts(currentLineMonth); }
+
+// ─── WEEK SWITCH ───
+let weekBarChartInst = null;
+
+function switchWeekMonth(month, el) {
+  document.querySelectorAll('#weekMonthTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  currentWeekMonth = month;
+  const wd = ALL_WEEK_DATA[month];
+  document.getElementById('weekChartTitle').textContent = MONTHS[month-1]+' 週次業績進度';
+  document.getElementById('weekChartSub').textContent   = wd.filled;
+  if(weekBarChartInst){
+    weekBarChartInst.data.labels = wd.labels;
+    weekBarChartInst.data.datasets[0].data = wd.gin;
+    weekBarChartInst.data.datasets[1].data = wd.pl;
+    weekBarChartInst.update();
+  }
 }
 
 // ─── BOOT ───
