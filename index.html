@@ -1752,7 +1752,7 @@ function renderDailyRegFromData(dates, counts) {
     const m=parseInt(dates[i].split('/')[0]); return m===curMonth && counts[i]>0;
   }).length} 天有開通`;
   document.getElementById('dailyRegSub').textContent =
-    `${dates[0]} ~ ${dates[dates.length-1]} · 直接從行政試算表讀取`;
+    `${dates[0]} ~ ${dates[dates.length-1]} · 本月累計 ${monthTotal} 人`;
   if(dailyRegChartInst){ dailyRegChartInst.destroy(); dailyRegChartInst=null; }
   const rc = getC();
   dailyRegChartInst = new Chart(document.getElementById('dailyRegChart').getContext('2d'), {
@@ -1769,7 +1769,7 @@ function renderDailyRegFromData(dates, counts) {
         tooltip:{
           backgroundColor:rc.tooltipBg, titleColor:rc.tooltipTitle, bodyColor:rc.tooltipBody,
           borderColor:rc.tooltipBorder, borderWidth:1, padding:10, cornerRadius:10,
-          callbacks:{ label: ctx => `  開通 ${ctx.raw} 人` }
+          callbacks:{ label: ctx => `  當日開通 ${ctx.raw} 人` }
         }
       },
       scales:{
