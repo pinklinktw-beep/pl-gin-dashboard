@@ -1011,7 +1011,7 @@ let C = getC();
 const SHEET_ID   = '1QiI2qe8ntPZGjiN1Nm_fcaMSeTnbXhW9Ar-eN7TNMoY';
 const SHEET_NAME = '_Dashboard';   // 摘要分頁名稱
 const REG_SHEET_ID   = '1L_SZE8PqjGwfTk7fCKQBwLDLNVgrGTNTihoQoCmr3Ig';
-const REG_SHEET_NAME = '2026 每日註冊人數統計';
+const REG_SHEET_NAME = '🪐(2026年/新版)每日註冊人數統計';
 
 // 抓取單一分頁 CSV，回傳二維陣列 [[row], [row], ...]
 async function fetchSheet(sheetName) {
@@ -1712,6 +1712,8 @@ function renderDailyRegFromData(dates, counts) {
 
 // 直接從行政 Sheets 讀取（Apps Script 尚未執行時的備援）
 async function loadDailyRegData() {
+  // 直接從行政試算表「🪐(2026年/新版)每日註冊人數統計」抓資料
+  // 格式：r[1]=日期(M/D), r[7]=當日開通人數
   try {
     const url = `https://docs.google.com/spreadsheets/d/${REG_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(REG_SHEET_NAME)}`;
     const res  = await fetch(url);
@@ -1722,31 +1724,25 @@ async function loadDailyRegData() {
          .map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim())
     );
 
-    const dailyData = {};
-    let dateHeader = null;
+    const dailyDates = [], dailyCounts = [];
     rows.forEach(row => {
-      const hasDate = row.slice(1).some(c => /^\d{1,2}\/\d{1,2}$/.test(c));
-      if(hasDate) { dateHeader = row; return; }
-      if(dateHeader && row[0]==='開通人數') {
-        dateHeader.forEach((d, ci) => {
-          if(ci === 0) return;
-          if(/^\d{1,2}\/\d{1,2}$/.test(d.trim())) {
-            const val = parseInt(row[ci]) || 0;
-            if(val > 0) dailyData[d.trim()] = (dailyData[d.trim()]||0) + val;
-          }
-        });
-        dateHeader = null;
-      }
+      // r[1] = 日期欄，格式 M/D（如 4/1）
+      const date = (row[1] || '').trim();
+      if(!/^\d{1,2}\/\d{1,2}$/.test(date)) return;
+      // r[7] = 當日開通人數
+      const val = parseInt((row[7]||'').replace(/,/g,'')) || 0;
+      dailyDates.push(date);
+      dailyCounts.push(val);
     });
 
-    const sorted = Object.keys(dailyData).sort((a,b)=>{
-      const [am,ad]=a.split('/').map(Number), [bm,bd]=b.split('/').map(Number);
-      return am!==bm?am-bm:ad-bd;
-    });
-    renderDailyRegFromData(sorted, sorted.map(d=>dailyData[d]));
+    if(dailyDates.length > 0) {
+      renderDailyRegFromData(dailyDates, dailyCounts);
+    } else {
+      document.getElementById('dailyRegSub').textContent = '尚無每日開通資料';
+    }
   } catch(e) {
-    console.warn('每日開通資料讀取失敗（備援）', e);
-    document.getElementById('dailyRegSub').textContent = '請先執行 Apps Script syncDashboard() 以載入開通資料';
+    console.warn('每日開通資料讀取失敗', e);
+    document.getElementById('dailyRegSub').textContent = '每日開通資料讀取失敗';
   }
 }
 
