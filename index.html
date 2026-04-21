@@ -1125,16 +1125,33 @@ async function loadFromSheets() {
       });
     }
 
-    // ── 區塊4：週次業績 (section=week, month, label, gin, pl)
-    // 新格式：第2欄=month數字，第3欄=W1~W5，第4欄=gin，第5欄=pl
+    // ── 區塊4：週次業績
+    // 支援兩種格式：
+    //   公式版（_Dashboard 手動）: section header = "section,label,gin,pl"
+    //     week,  "W1 4/1-5", gin, pl  → r[1]=label(含日期), r[2]=gin, r[3]=pl
+    //   APS版（sync_dashboard.gs）:
+    //     week, month, "W1", gin, pl  → r[1]=month數字, r[2]=label, r[3]=gin, r[4]=pl
     const weekRaw = rows.filter(r => r[0]==='week');
     if(weekRaw.length > 0){
-      // 按月份分組，每5筆為一個月
+      // 判斷格式：若 r[1] 是純數字 → APS版；否則 → 公式版
+      const isApsFormat = weekRaw.length > 0 && /^\d+$/.test(String(weekRaw[0][1]).trim());
       weekRaw.forEach(r => {
-        const wMonth = parseInt(r[1]) || 0;
-        const label  = r[2] || '';
-        const ginVal = n(r[3]);
-        const plVal  = n(r[4]);
+        let wMonth, label, ginVal, plVal;
+        if(isApsFormat){
+          // APS格式：week, month, W1, gin, pl
+          wMonth = parseInt(r[1]) || 0;
+          label  = String(r[2] || '').trim();
+          ginVal = n(r[3]);
+          plVal  = n(r[4]);
+        } else {
+          // 公式版格式：week, "W1 4/1-5", gin, pl
+          // 此格式只有當月資料（_Dashboard 只保存當月），預設為 currentWeekMonth
+          const rawLabel = String(r[1] || '').trim();
+          label  = rawLabel.split(' ')[0]; // 取 W1、W2 等前綴
+          ginVal = n(r[2]);
+          plVal  = n(r[3]);
+          wMonth = currentWeekMonth; // 公式版只有當月
+        }
         if(!wMonth || !ALL_WEEK_DATA[wMonth]) return;
         const wd = ALL_WEEK_DATA[wMonth];
         const wIdx = ['W1','W2','W3','W4','W5'].indexOf(label);
@@ -1185,12 +1202,12 @@ async function loadFromSheets() {
 const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
 const gin2026 = {
-  GreenGold:  [3542633,3643921,472910,351888,0,0,0,0,0,0,0,0],
-  Ovie:       [116613,140245,166385,61006,0,0,0,0,0,0,0,0],
-  CHESS:      [1276138,252811,243137,228986,0,0,0,0,0,0,0,0],
+  GreenGold:  [3542633,3643921,472910,211468,0,0,0,0,0,0,0,0],
+  Ovie:       [116613,140245,166385,35011,0,0,0,0,0,0,0,0],
+  CHESS:      [1276138,252811,243137,93420,0,0,0,0,0,0,0,0],
   Miidel:     [0,0,0,0,0,0,0,0,0,0,0,0],
-  F0T1:       [26824,15180,18772,14656,0,0,0,0,0,0,0,0],
-  PocketMeal: [23693,5499,2580,57707,0,0,0,0,0,0,0,0]
+  F0T1:       [26824,15180,18772,10332,0,0,0,0,0,0,0,0],
+  PocketMeal: [23693,5499,2580,54284,0,0,0,0,0,0,0,0]
 };
 const gin2025 = {
   GreenGold:  [5060122,4090490,784329,523896,1928764,1313043,1863837,1026711,738776,383133,10267339,2403900],
@@ -1201,9 +1218,9 @@ const gin2025 = {
   PocketMeal: [0,199841,94932,93642,74614,52880,30656,215866,17553,23098,20079,43681]
 };
 const pl2026 = {
-  GreenGold:  [416946,489335,66388,32044,0,0,0,0,0,0,0,0],
-  Ovie:       [26723,41936,17959,9635,0,0,0,0,0,0,0,0],
-  CHESS:      [266367,100787,32682,72968,0,0,0,0,0,0,0,0],
+  GreenGold:  [416946,489335,66388,16258,0,0,0,0,0,0,0,0],
+  Ovie:       [26723,41936,17959,6613,0,0,0,0,0,0,0,0],
+  CHESS:      [266367,100787,32682,35634,0,0,0,0,0,0,0,0],
   Miidel:     [0,0,0,0,0,0,0,0,0,0,0,0],
   F0T1:       [5300,29563,26063,10520,0,0,0,0,0,0,0,0],
   PocketMeal: [2593,0,0,15298,0,0,0,0,0,0,0,0]
@@ -1217,14 +1234,14 @@ const pl2025 = {
   PocketMeal: [0,5096,13883,10432,2241,0,3580,3395,4636,0,0,0]
 };
 
-const ginMonthly = [4985901,4057656,903784,714243,0,0,0,0,0,0,0,0];
-const plMonthly  = [717929,661621,143092,140465,0,0,0,0,0,0,0,0];
+const ginMonthly = [4985901,4057656,903784,404515,0,0,0,0,0,0,0,0];
+const plMonthly  = [717929,661621,143092,84323,0,0,0,0,0,0,0,0];
 
 const memberData = {
-  plCode:   [1128,1136,1148,1175,0,0,0,0,0,0,0,0],
-  plSocial: [976,964,942,935,0,0,0,0,0,0,0,0],
-  ginCode:  [438,439,321,323,0,0,0,0,0,0,0,0],
-  plCodeNew:[3,8,12,30,0,0,0,0,0,0,0,0]
+  plCode:   [1128,1136,1148,1148,0,0,0,0,0,0,0,0],
+  plSocial: [976,964,942,938,0,0,0,0,0,0,0,0],
+  ginCode:  [438,439,321,322,0,0,0,0,0,0,0,0],
+  plCodeNew:[3,8,12,3,0,0,0,0,0,0,0,0]
 };
 
 // LINE 日報：按月份存放。每月由 _Dashboard sheet 的 line 區塊載入，
