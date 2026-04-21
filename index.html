@@ -793,10 +793,11 @@ html.dark .loading-track { background: rgba(255,255,255,0.08); }
   <div class="page-header">
     <div>
       <div class="page-title">品牌業績</div>
-      <div class="page-sub">2026 年各品牌月累計</div>
+      <div class="page-sub" id="brandPageSub">2026 年各品牌月累計</div>
     </div>
   </div>
 
+  <!-- 品牌選擇器 -->
   <div class="brand-tags" id="brandTags">
     <span class="brand-tag active" style="color:#F472B6;background:rgba(244,114,182,.12)" onclick="setBrand('GreenGold',this)">GreenGold</span>
     <span class="brand-tag"        style="color:#34D399;background:rgba(52,211,153,.12)"  onclick="setBrand('Ovie',this)">Ovie</span>
@@ -805,17 +806,9 @@ html.dark .loading-track { background: rgba(255,255,255,0.08); }
     <span class="brand-tag"        style="color:#22D3EE;background:rgba(34,211,238,.12)"  onclick="setBrand('PocketMeal',this)">PocketMeal</span>
   </div>
 
-  <div class="card">
-    <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
-    <div style="overflow-x:auto">
-      <table class="data-table">
-        <thead><tr><th>品牌 / 通路</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>全年合計</th></tr></thead>
-        <tbody id="brandTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
+  <!-- 主圖區：GIN vs PL 月趨勢 ＋ 同期對比（左右並排） -->
   <div class="grid-2">
+    <!-- 左：GIN vs PL 2026 月趨勢 -->
     <div class="card">
       <div class="card-header">
         <div>
@@ -829,18 +822,37 @@ html.dark .loading-track { background: rgba(255,255,255,0.08); }
       </div>
       <canvas id="brandLineChart" height="210"></canvas>
     </div>
+    <!-- 右：2025 vs 2026 同期對比，GIN/PL 可切換 -->
     <div class="card">
       <div class="card-header">
         <div>
           <div class="card-title">2025 vs 2026 同期對比</div>
-          <div class="card-sub" id="brandCompSub">GreenGold · GIN · 1~4 月</div>
+          <div class="card-sub" id="brandCompSub">GreenGold · GIN · 全年</div>
         </div>
-        <div class="legend">
-          <span class="leg"><span class="leg-dot" style="background:var(--gin-lt);border:1.5px solid var(--gin)"></span>2025</span>
-          <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>2026</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="legend">
+            <span class="leg"><span class="leg-dot" style="background:var(--gin-lt);border:1.5px solid var(--gin)"></span>2025</span>
+            <span class="leg"><span class="leg-dot" style="background:var(--gin)"></span>2026</span>
+          </div>
+          <!-- GIN / PL 切換 -->
+          <div style="display:flex;gap:4px">
+            <button id="compTabGIN" class="tab-btn active" style="padding:3px 10px;font-size:11px" onclick="setCompChannel('GIN',this)">GIN</button>
+            <button id="compTabPL"  class="tab-btn"        style="padding:3px 10px;font-size:11px" onclick="setCompChannel('PL',this)">PL</button>
+          </div>
         </div>
       </div>
       <canvas id="brandCompChart" height="210"></canvas>
+    </div>
+  </div>
+
+  <!-- 品牌彙整表格（執行長總覽） -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>品牌 / 通路</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>全年合計</th></tr></thead>
+        <tbody id="brandTableBody"></tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -937,7 +949,7 @@ html.dark .loading-track { background: rgba(255,255,255,0.08); }
   <div class="card">
     <div class="card-header">
       <div>
-        <div class="card-title">每日折扣碼開通趨勢</div>
+        <div class="card-title">每日開通人數</div>
         <div class="card-sub" id="dailyRegSub">從行政工作紀錄載入中…</div>
       </div>
     </div>
@@ -1544,20 +1556,36 @@ function buildBrandLineData(brand) {
       fill:true, tension:.4, pointRadius:4, borderWidth:2, borderDash:[5,4], pointBackgroundColor:C.pl }
   ]};
 }
-function buildBrandCompData(brand) {
+let compChannel = 'GIN'; // 目前同期對比顯示的通路
+function buildBrandCompData(brand, ch) {
+  ch = ch || compChannel;
+  const data25 = ch==='GIN' ? gin2025[brand] : pl2025[brand];
+  const data26 = ch==='GIN' ? gin2026[brand] : pl2026[brand];
+  const color25 = ch==='GIN' ? C.ginLt : C.plLt;
+  const color26 = ch==='GIN' ? C.gin   : C.pl;
   return { labels:MONTHS, datasets:[
-    { label:'2025 GIN', data:gin2025[brand], backgroundColor:C.ginLt, borderRadius:7, barPercentage:.65 },
-    { label:'2026 GIN', data:gin2026[brand], backgroundColor:C.gin,   borderRadius:7, barPercentage:.65 }
+    { label:`2025 ${ch}`, data:data25, backgroundColor:color25, borderRadius:7, barPercentage:.65 },
+    { label:`2026 ${ch}`, data:data26, backgroundColor:color26, borderRadius:7, barPercentage:.65 }
   ]};
 }
+let currentBrand = 'GreenGold';
 function setBrand(brand, el) {
+  currentBrand = brand;
   document.querySelectorAll('.brand-tag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('brandChartTitle').textContent = brand+' — GIN vs PL';
-  document.getElementById('brandCompSub').textContent    = brand+' · GIN · 全年';
+  document.getElementById('brandCompSub').textContent    = brand+' · '+compChannel+' · 全年';
   brandLineChart.data = buildBrandLineData(brand);
   brandLineChart.update();
-  brandCompChart.data = buildBrandCompData(brand);
+  brandCompChart.data = buildBrandCompData(brand, compChannel);
+  brandCompChart.update();
+}
+function setCompChannel(ch, el) {
+  compChannel = ch;
+  el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('brandCompSub').textContent = currentBrand+' · '+ch+' · 全年';
+  brandCompChart.data = buildBrandCompData(currentBrand, ch);
   brandCompChart.update();
 }
 function buildBrandTable() {
