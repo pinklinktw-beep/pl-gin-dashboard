@@ -10,27 +10,30 @@
    DESIGN TOKENS
 ══════════════════════════════════ */
 :root {
-  /* ── Primary palette: soft pink-purple, grey, white ── */
-  --gin:       #8B7FC8;   /* GIN  = muted indigo-purple  */
-  --gin-lt:    #EAE7F8;
-  --gin-dk:    #5548A0;
-  --pl:        #C4708C;   /* PL   = dusty rose-pink      */
-  --pl-lt:     #F7E2EB;
-  --pl-dk:     #9A4060;
+  /* ── Primary palette: neon purple & neon pink on dark bg ── */
+  --gin:       #A78BFA;   /* GIN  = neon purple          */
+  --gin-lt:    rgba(167,139,250,.15);
+  --gin-dk:    #7C3AED;
+  --gin-glow:  rgba(167,139,250,.35);
+  --pl:        #F472B6;   /* PL   = neon pink            */
+  --pl-lt:     rgba(244,114,182,.15);
+  --pl-dk:     #DB2777;
+  --pl-glow:   rgba(244,114,182,.35);
 
-  --surface-0: #FFFFFF;
-  --surface-1: #F6F5FB;   /* page bg — very pale lavender */
-  --surface-2: #EDEAF6;   /* hover / subtle fill          */
-  --border:    #E2DEEF;
-  --muted:     #9E9AB5;
-  --text:      #1C1B2E;
-  --text-2:    #6B6880;
+  --surface-0: #13131F;   /* card bg */
+  --surface-1: #0D0D14;   /* page bg */
+  --surface-2: #1E1E2E;   /* hover */
+  --surface-3: #1A1A2A;   /* sidebar */
+  --border:    rgba(255,255,255,0.07);
+  --muted:     #6B6880;
+  --text:      #F0EEFF;
+  --text-2:    #9D9AB5;
 
   /* status */
-  --up:        #3DB87A;
-  --dn:        #E05A5A;
-  --neu:       #A0A0B8;
-  --line-grn:  #06C755;
+  --up:        #34D399;
+  --dn:        #F87171;
+  --neu:       #6B7280;
+  --line-grn:  #10B981;
 
   /* sidebar */
   --sb-w:      236px;
@@ -60,7 +63,7 @@ svg { display: block; flex-shrink: 0; }
 ══════════════════════════════════ */
 .sidebar {
   width: var(--sb-w);
-  background: var(--surface-0);
+  background: var(--surface-3);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -80,7 +83,7 @@ svg { display: block; flex-shrink: 0; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--gin-dk) 0%, var(--gin) 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
   color: #fff;
   padding: 6px 12px 6px 8px;
   border-radius: 50px;
@@ -89,13 +92,13 @@ svg { display: block; flex-shrink: 0; }
 .sb-logo-pill svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .sb-logo-pill span { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
 .sb-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; padding-left: 2px; }
-.sb-sub   { font-size: 11px; color: var(--muted); padding-left: 2px; margin-top: 2px; }
+.sb-sub   { font-size: 11px; color: rgba(255,255,255,0.25); padding-left: 2px; margin-top: 2px; }
 
 /* nav */
 .sb-nav { flex: 1; padding: 12px 12px 0; overflow-y: auto; }
 .sb-section-label {
   font-size: 10px; font-weight: 600; letter-spacing: .1em;
-  color: var(--muted); text-transform: uppercase;
+  color: rgba(255,255,255,0.25); text-transform: uppercase;
   padding: 14px 8px 6px;
 }
 .nav-item {
@@ -110,8 +113,8 @@ svg { display: block; flex-shrink: 0; }
 }
 .nav-item:hover { background: var(--surface-2); color: var(--text); }
 .nav-item.active {
-  background: var(--gin-lt);
-  color: var(--gin-dk);
+  background: rgba(167,139,250,.15);
+  color: var(--gin);
   font-weight: 600;
 }
 .nav-icon { width: 18px; height: 18px; }
@@ -124,7 +127,7 @@ svg { display: block; flex-shrink: 0; }
 }
 .sb-cloud-label {
   font-size: 10px; font-weight: 600; letter-spacing: .1em;
-  color: var(--muted); text-transform: uppercase;
+  color: rgba(255,255,255,0.25); text-transform: uppercase;
   padding: 0 8px 8px;
 }
 .cloud-link {
@@ -137,12 +140,12 @@ svg { display: block; flex-shrink: 0; }
   transition: background .15s, color .15s;
   margin-bottom: 2px;
 }
-.cloud-link:hover { background: var(--surface-2); color: var(--gin-dk); }
+.cloud-link:hover { background: var(--surface-2); color: var(--gin); }
 .cloud-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .cloud-link .link-badge {
   margin-left: auto;
   font-size: 10px; padding: 2px 7px;
-  background: var(--gin-lt); color: var(--gin-dk);
+  background: var(--gin-lt); color: var(--gin);
   border-radius: 20px; font-weight: 600;
 }
 
@@ -152,6 +155,7 @@ svg { display: block; flex-shrink: 0; }
   border-top: 1px solid var(--border);
   font-size: 10.5px; color: var(--muted);
   line-height: 1.6;
+  color: #6B6880;
 }
 
 /* ══════════════════════════════════
@@ -176,7 +180,7 @@ svg { display: block; flex-shrink: 0; }
 .page-sub   { font-size: 12px; color: var(--muted); margin-top: 3px; }
 .pill-badge {
   display: inline-flex; align-items: center; gap: 5px;
-  background: var(--surface-0);
+  background: var(--surface-2);
   border: 1px solid var(--border);
   color: var(--text-2);
   font-size: 11px; font-weight: 600;
@@ -197,12 +201,12 @@ svg { display: block; flex-shrink: 0; }
   overflow: hidden;
   transition: box-shadow .18s;
 }
-.kpi-card:hover { box-shadow: 0 6px 20px rgba(90,72,160,.10); }
+.kpi-card:hover { box-shadow: 0 0 0 1px rgba(167,139,250,.3), 0 8px 24px rgba(167,139,250,.12); }
 .kpi-card-accent {
   position: absolute; top: 0; right: 0;
   width: 72px; height: 72px;
   border-radius: 0 var(--r-lg) 0 72px;
-  opacity: .18;
+  opacity: .12;
 }
 .kpi-icon {
   width: 34px; height: 34px;
@@ -211,8 +215,8 @@ svg { display: block; flex-shrink: 0; }
   margin-bottom: 12px;
 }
 .kpi-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.kpi-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; font-weight: 500; }
-.kpi-value { font-size: 22px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.kpi-label { font-size: 11px; color: var(--text-2); margin-bottom: 3px; font-weight: 500; }
+.kpi-value { font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
 .kpi-delta {
   font-size: 11px; margin-top: 7px;
   display: flex; align-items: center; gap: 4px; font-weight: 500;
@@ -230,11 +234,12 @@ svg { display: block; flex-shrink: 0; }
   padding: 18px 20px;
   margin-bottom: 16px;
   transition: box-shadow .18s;
+  backdrop-filter: blur(0);
 }
-.card:hover { box-shadow: 0 4px 16px rgba(90,72,160,.07); }
+.card:hover { box-shadow: 0 4px 24px rgba(167,139,250,.08); }
 .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
 .card-title { font-size: 13.5px; font-weight: 600; color: var(--text); }
-.card-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.card-sub   { font-size: 11px; color: var(--text-2); margin-top: 2px; }
 
 /* ── GRIDS ── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -243,7 +248,7 @@ svg { display: block; flex-shrink: 0; }
 /* ── TAB BAR ── */
 .tab-bar {
   display: inline-flex; gap: 3px;
-  background: var(--surface-1);
+  background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 50px;
   padding: 3px;
@@ -251,12 +256,12 @@ svg { display: block; flex-shrink: 0; }
 .tab-btn {
   padding: 5px 14px; border-radius: 50px; border: none;
   background: transparent; font-size: 12px; cursor: pointer;
-  color: var(--muted); font-weight: 500; transition: all .18s;
+  color: var(--text-2); font-weight: 500; transition: all .18s;
 }
 .tab-btn.active {
-  background: var(--surface-0); color: var(--gin-dk);
+  background: var(--surface-0); color: var(--gin);
   font-weight: 600;
-  box-shadow: 0 1px 4px rgba(90,72,160,.12);
+  box-shadow: 0 1px 8px rgba(167,139,250,.2);
 }
 
 /* ── BRAND TAGS ── */
@@ -271,7 +276,7 @@ svg { display: block; flex-shrink: 0; }
 
 /* ── LEGEND ── */
 .legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
-.leg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-2); }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-2); } /* Keep --text-2 */
 .leg-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .leg-line { width: 18px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
 .leg-dash { width: 18px; height: 0; border-bottom: 2.5px dashed; flex-shrink: 0; }
@@ -279,26 +284,26 @@ svg { display: block; flex-shrink: 0; }
 /* ── TABLE ── */
 .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .data-table th {
-  background: var(--gin-lt); color: var(--gin-dk);
+  background: rgba(167,139,250,.12); color: var(--gin);
   font-weight: 600; padding: 9px 11px;
-  text-align: right; border-bottom: 1.5px solid var(--border);
+  text-align: right; border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 .data-table th:first-child { text-align: left; border-radius: var(--r-sm) 0 0 0; }
 .data-table th:last-child  { border-radius: 0 var(--r-sm) 0 0; }
-.data-table td { padding: 8px 11px; text-align: right; border-bottom: 1px solid var(--surface-2); }
+.data-table td { padding: 8px 11px; text-align: right; border-bottom: 1px solid var(--border); }
 .data-table td:first-child { text-align: left; font-weight: 500; }
 .data-table tr:last-child td { border-bottom: none; }
-.data-table tr.mom-row  td { color: #5A5670; font-size: 11px; background: var(--surface-1); font-weight: 500; }
-.data-table tr.total-row td { font-weight: 700; background: var(--gin-lt); color: var(--gin-dk); }
-.data-table tbody tr:hover td { background: var(--surface-1); }
+.data-table tr.mom-row  td { color: var(--text-2); font-size: 11px; background: var(--surface-2); font-weight: 500; }
+.data-table tr.total-row td { font-weight: 700; background: rgba(167,139,250,.12); color: var(--gin); }
+.data-table tbody tr:hover td { background: var(--surface-2); }
 .pos { color: var(--up); font-weight: 600; }
 .neg { color: var(--dn); font-weight: 600; }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
 
 /* ══════════════════════════════════
    RESPONSIVE — TABLET
@@ -339,7 +344,7 @@ svg { display: block; flex-shrink: 0; }
     align-items: center;
     justify-content: space-between;
     padding: 12px 14px;
-    background: var(--surface-0);
+    background: var(--surface-3);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -350,7 +355,7 @@ svg { display: block; flex-shrink: 0; }
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: linear-gradient(135deg, var(--gin-dk) 0%, var(--gin) 100%);
+    background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
     color: #fff;
     padding: 5px 10px 5px 7px;
     border-radius: 50px;
@@ -361,8 +366,8 @@ svg { display: block; flex-shrink: 0; }
   .mobile-header-title { font-size: 14px; font-weight: 700; color: var(--text); }
   .mobile-header-badge {
     font-size: 10px; font-weight: 600;
-    color: var(--muted);
-    background: var(--surface-1);
+    color: var(--text-2);
+    background: var(--surface-2);
     border: 1px solid var(--border);
     padding: 3px 8px; border-radius: 20px;
     flex-shrink: 0;
@@ -373,10 +378,10 @@ svg { display: block; flex-shrink: 0; }
     display: flex !important;
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: var(--surface-0);
+    background: var(--surface-3);
     border-top: 1px solid var(--border);
     z-index: 100;
-    box-shadow: 0 -3px 16px rgba(90,72,160,.10);
+    box-shadow: 0 -4px 20px rgba(0,0,0,.4);
     padding-bottom: env(safe-area-inset-bottom, 4px);
   }
   .mobile-tab {
@@ -390,7 +395,7 @@ svg { display: block; flex-shrink: 0; }
     cursor: pointer;
     font-size: 10px;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--text-2);
     transition: color .15s;
     border: none;
     background: none;
@@ -398,8 +403,8 @@ svg { display: block; flex-shrink: 0; }
     min-width: 0;
   }
   .mobile-tab svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-  .mobile-tab.active { color: var(--gin-dk); }
-  .mobile-tab.active svg { stroke: var(--gin-dk); }
+  .mobile-tab.active { color: var(--gin); }
+  .mobile-tab.active svg { stroke: var(--gin); }
   .mobile-tab-dot {
     width: 4px; height: 4px;
     border-radius: 50%;
@@ -448,11 +453,33 @@ svg { display: block; flex-shrink: 0; }
 }
 
 /* hide mobile elements on desktop — must come BEFORE media query to avoid override */
+
+/* ── Dark theme Chart.js grid override ── */
+canvas { background: transparent; }
+
+/* ── Neon glow on active nav ── */
+.nav-item.active {
+  box-shadow: inset 3px 0 0 var(--gin);
+}
+
+/* ── KPI card top accent deeper ── */
+.kpi-card-accent { opacity: .12; }
+
+/* ── Scrollbar for dark theme ── */
+::-webkit-scrollbar-thumb { background: rgba(167,139,250,.25); }
+::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,.45); }
+
+/* ── Brand tag hover glow ── */
+.brand-tag:hover { box-shadow: 0 0 0 1px currentColor; }
+.brand-tag.active { border-color: currentColor; box-shadow: 0 0 8px rgba(255,255,255,.1); }
+
+/* ── Table PL total row ── */
+.data-table tr.total-row.pl-row td { background: rgba(244,114,182,.12) !important; color: var(--pl) !important; }
 </style>
 </head>
 <style>
 #loadingOverlay {
-  position: fixed; inset: 0; background: rgba(246,245,251,.88);
+  position: fixed; inset: 0; background: rgba(13,13,20,.92);
   z-index: 9999; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 16px;
   transition: opacity .3s;
@@ -462,8 +489,8 @@ svg { display: block; flex-shrink: 0; }
   border-radius: 2px; transition: width .4s ease;
   max-width: 240px;
 }
-.loading-track { width: 240px; height: 4px; background: var(--gin-lt); border-radius: 2px; overflow: hidden; }
-.loading-text { font-size: 13px; color: var(--muted); }
+.loading-track { width: 240px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.loading-text { font-size: 13px; color: var(--text); }
 </style>
 <body>
 
@@ -497,11 +524,6 @@ svg { display: block; flex-shrink: 0; }
   <button class="mobile-tab" onclick="showPage('members',this)" data-label="會員人數">
     <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     會員
-    <div class="mobile-tab-dot"></div>
-  </button>
-  <button class="mobile-tab" onclick="showPage('line',this)" data-label="官方LINE">
-    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    LINE
     <div class="mobile-tab-dot"></div>
   </button>
 </nav>
@@ -550,10 +572,6 @@ svg { display: block; flex-shrink: 0; }
       <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
       會員人數
     </div>
-    <div class="nav-item" onclick="showPage('line',this)">
-      <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      官方 LINE
-    </div>
   </nav>
 
   <!-- Cloud Links -->
@@ -569,7 +587,7 @@ svg { display: block; flex-shrink: 0; }
 
   <!-- Footer -->
   <div class="sb-footer">
-    <span id="updateTime">更新：2026 / 04 / 17</span><br>
+    <span id="updateTime">載入中…</span><br>
     來源：Google Sheets Live
   </div>
 </aside>
@@ -584,12 +602,34 @@ svg { display: block; flex-shrink: 0; }
   <div class="page-header">
     <div>
       <div class="page-title">總覽</div>
-      <div class="page-sub">2026 年度累計 · 至 4 月 W2（4/16）</div>
+      <div class="page-sub" id="overviewPageSub">2026 年度累計 · 至 4 月 W2（4/16）</div>
     </div>
     <span class="pill-badge">
       <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="3" fill="var(--up)" stroke="none"/></svg>
       截至 4 / 16
     </span>
+  </div>
+
+  <!-- 視角切換 -->
+  <div class="tab-bar" style="margin-bottom:16px" id="ovViewTabs">
+    <button class="tab-btn active" onclick="switchOvView('month',this)">📅 本月概況</button>
+    <button class="tab-btn" onclick="switchOvView('year',this)">📊 全年總覽</button>
+  </div>
+
+  <!-- 月份選擇（本月模式時顯示） -->
+  <div class="tab-bar" id="ovMonthSelectTabs" style="margin-bottom:16px;flex-wrap:wrap;gap:3px;display:none">
+    <button class="tab-btn" onclick="switchOvMonth(1,this)">1月</button>
+    <button class="tab-btn" onclick="switchOvMonth(2,this)">2月</button>
+    <button class="tab-btn" onclick="switchOvMonth(3,this)">3月</button>
+    <button class="tab-btn" onclick="switchOvMonth(4,this)">4月</button>
+    <button class="tab-btn" onclick="switchOvMonth(5,this)">5月</button>
+    <button class="tab-btn" onclick="switchOvMonth(6,this)">6月</button>
+    <button class="tab-btn" onclick="switchOvMonth(7,this)">7月</button>
+    <button class="tab-btn" onclick="switchOvMonth(8,this)">8月</button>
+    <button class="tab-btn" onclick="switchOvMonth(9,this)">9月</button>
+    <button class="tab-btn" onclick="switchOvMonth(10,this)">10月</button>
+    <button class="tab-btn" onclick="switchOvMonth(11,this)">11月</button>
+    <button class="tab-btn" onclick="switchOvMonth(12,this)">12月</button>
   </div>
 
   <!-- KPI -->
@@ -599,18 +639,18 @@ svg { display: block; flex-shrink: 0; }
       <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
-      <div class="kpi-label">GIN 年累計業績</div>
-      <div class="kpi-value" style="color:var(--gin-dk)">$10.35M</div>
-      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>vs 2025 同期 −17%</div>
+      <div class="kpi-label" id="ovKpiGinLabel">GIN 年累計業績</div>
+      <div class="kpi-value" style="color:var(--gin-dk)" id="ovKpiGinVal">$10.35M</div>
+      <div class="kpi-delta dn" id="ovKpiGinDelta"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>vs 2025 同期 −17%</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--pl)"></div>
       <div class="kpi-icon" style="background:var(--pl-lt);color:var(--pl-dk)">
         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
-      <div class="kpi-label">PL 年累計業績</div>
-      <div class="kpi-value" style="color:var(--pl-dk)">$1.61M</div>
-      <div class="kpi-delta up"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>vs 2025 同期 +30%</div>
+      <div class="kpi-label" id="ovKpiPlLabel">PL 年累計業績</div>
+      <div class="kpi-value" style="color:var(--pl-dk)" id="ovKpiPlVal">$1.61M</div>
+      <div class="kpi-delta up" id="ovKpiPlDelta"><svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>vs 2025 同期 +30%</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--gin)"></div>
@@ -618,8 +658,8 @@ svg { display: block; flex-shrink: 0; }
         <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
       </div>
       <div class="kpi-label">PL 折扣碼人數</div>
-      <div class="kpi-value">1,148</div>
-      <div class="kpi-delta neu">— 月末快照</div>
+      <div class="kpi-value" id="ovKpiCodeVal">1,148</div>
+      <div class="kpi-delta neu" id="ovKpiCodeDelta">— 月末快照</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-accent" style="background:var(--pl)"></div>
@@ -627,8 +667,8 @@ svg { display: block; flex-shrink: 0; }
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
       </div>
       <div class="kpi-label">PL 社群影響力</div>
-      <div class="kpi-value">938</div>
-      <div class="kpi-delta dn"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>−4 vs 上月</div>
+      <div class="kpi-value" id="ovKpiSocialVal">938</div>
+      <div class="kpi-delta dn" id="ovKpiSocialDelta"><svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>−4 vs 上月</div>
     </div>
   </div>
 
@@ -649,7 +689,7 @@ svg { display: block; flex-shrink: 0; }
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">品牌佔比 GIN（1~4 月）</div>
+          <div class="card-title" id="ovPieGINTitle">品牌佔比 GIN（1~4 月）</div>
           <div class="card-sub">GIN 通路各品牌累計</div>
         </div>
       </div>
@@ -658,7 +698,7 @@ svg { display: block; flex-shrink: 0; }
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">品牌佔比 PL（1~4 月）</div>
+          <div class="card-title" id="ovPiePLTitle">品牌佔比 PL（1~4 月）</div>
           <div class="card-sub">PL 通路各品牌累計</div>
         </div>
       </div>
@@ -708,11 +748,21 @@ svg { display: block; flex-shrink: 0; }
   </div>
 
   <div class="brand-tags" id="brandTags">
-    <span class="brand-tag active" style="color:#9A4060;background:#F7E2EB"   onclick="setBrand('GreenGold',this)">GreenGold</span>
-    <span class="brand-tag"        style="color:#2A7058;background:#D6EFE6"   onclick="setBrand('Ovie',this)">Ovie</span>
-    <span class="brand-tag"        style="color:#4A3D9C;background:#E4E0F6"   onclick="setBrand('CHESS',this)">CHESS</span>
-    <span class="brand-tag"        style="color:#C05010;background:#FCE8D5"   onclick="setBrand('F0T1',this)">F0T1</span>
-    <span class="brand-tag"        style="color:#156070;background:#D2EEF0"   onclick="setBrand('PocketMeal',this)">PocketMeal</span>
+    <span class="brand-tag active" style="color:#F472B6;background:rgba(244,114,182,.12)" onclick="setBrand('GreenGold',this)">GreenGold</span>
+    <span class="brand-tag"        style="color:#34D399;background:rgba(52,211,153,.12)"  onclick="setBrand('Ovie',this)">Ovie</span>
+    <span class="brand-tag"        style="color:#A78BFA;background:rgba(167,139,250,.12)" onclick="setBrand('CHESS',this)">CHESS</span>
+    <span class="brand-tag"        style="color:#FB923C;background:rgba(251,146,60,.12)"  onclick="setBrand('F0T1',this)">F0T1</span>
+    <span class="brand-tag"        style="color:#22D3EE;background:rgba(34,211,238,.12)"  onclick="setBrand('PocketMeal',this)">PocketMeal</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>品牌 / 通路</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>全年合計</th></tr></thead>
+        <tbody id="brandTableBody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="grid-2">
@@ -741,16 +791,6 @@ svg { display: block; flex-shrink: 0; }
         </div>
       </div>
       <canvas id="brandCompChart" height="210"></canvas>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-title">各品牌 2026 年月業績彙整</div></div>
-    <div style="overflow-x:auto">
-      <table class="data-table">
-        <thead><tr><th>品牌 / 通路</th><th>1月</th><th>2月</th><th>3月</th><th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>全年合計</th></tr></thead>
-        <tbody id="brandTableBody"></tbody>
-      </table>
     </div>
   </div>
 </div>
@@ -839,93 +879,15 @@ svg { display: block; flex-shrink: 0; }
       <canvas id="memberPieChart" height="190"></canvas>
     </div>
   </div>
-</div>
-
-
-<!-- ─────────────── 官方LINE ─────────────── -->
-<div id="page-line" class="page">
-  <div class="page-header">
-    <div>
-      <div class="page-title">官方 LINE@ 每日數字</div>
-      <div class="page-sub">總人數 = 當日快照 · 其餘 = 當日新增</div>
-    </div>
-    <div class="tab-bar" id="lineMonthTabs" style="flex-wrap:wrap;gap:4px">
-      <button class="tab-btn" onclick="switchLineMonth(1,this)">1月</button>
-      <button class="tab-btn" onclick="switchLineMonth(2,this)">2月</button>
-      <button class="tab-btn" onclick="switchLineMonth(3,this)">3月</button>
-      <button class="tab-btn active" onclick="switchLineMonth(4,this)">4月</button>
-      <button class="tab-btn" onclick="switchLineMonth(5,this)">5月</button>
-      <button class="tab-btn" onclick="switchLineMonth(6,this)">6月</button>
-      <button class="tab-btn" onclick="switchLineMonth(7,this)">7月</button>
-      <button class="tab-btn" onclick="switchLineMonth(8,this)">8月</button>
-      <button class="tab-btn" onclick="switchLineMonth(9,this)">9月</button>
-      <button class="tab-btn" onclick="switchLineMonth(10,this)">10月</button>
-      <button class="tab-btn" onclick="switchLineMonth(11,this)">11月</button>
-      <button class="tab-btn" onclick="switchLineMonth(12,this)">12月</button>
-    </div>
-  </div>
-
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-card-accent" style="background:#06C755"></div>
-      <div class="kpi-icon" style="background:#D4F5E2;color:#0A7A3A">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
-      <div class="kpi-label" id="lineKpi1Label">LINE 總人數（月末）</div>
-      <div class="kpi-value" style="color:#0A7A3A" id="lineKpi1Val">—</div>
-      <div class="kpi-delta" id="lineKpi1Delta">—</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-card-accent" style="background:var(--gin)"></div>
-      <div class="kpi-icon" style="background:var(--gin-lt);color:var(--gin-dk)">
-        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <div class="kpi-label" id="lineKpi2Label">首次開啟 累計</div>
-      <div class="kpi-value" id="lineKpi2Val">—</div>
-      <div class="kpi-delta neu" id="lineKpi2Delta">—</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-card-accent" style="background:var(--dn)"></div>
-      <div class="kpi-icon" style="background:#FDEAEA;color:var(--dn)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-      </div>
-      <div class="kpi-label" id="lineKpi3Label">累積封鎖數（月末）</div>
-      <div class="kpi-value" style="color:var(--dn)" id="lineKpi3Val">—</div>
-      <div class="kpi-delta" id="lineKpi3Delta">—</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-card-accent" style="background:var(--up)"></div>
-      <div class="kpi-icon" style="background:#DFF5EB;color:#1A8A50">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="kpi-label" id="lineKpi4Label">當月開通 CODE</div>
-      <div class="kpi-value" style="color:#1A8A50" id="lineKpi4Val">—</div>
-      <div class="kpi-delta neu" id="lineKpi4Delta">—</div>
-    </div>
-  </div>
 
   <div class="card">
     <div class="card-header">
-      <div class="card-title" id="lineFriendsTitle">LINE 總人數 日趨勢</div>
+      <div>
+        <div class="card-title">每日折扣碼開通趨勢</div>
+        <div class="card-sub" id="dailyRegSub">從行政工作紀錄載入中…</div>
+      </div>
     </div>
-    <canvas id="lineChartFriends" height="120"></canvas>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title" id="lineBlockTitle">累積封鎖數 日趨勢</div>
-    </div>
-    <canvas id="lineChartBlock" height="100"></canvas>
-  </div>
-
-  <div class="card">
-    <div class="card-header"><div class="card-title" id="lineTableTitle">每日明細</div></div>
-    <div style="overflow-x:auto">
-      <table class="data-table">
-        <thead><tr><th>週次</th><th>日期</th><th>LINE 總人數</th><th>首次開啟</th><th>累積封鎖</th><th>完成 CODE</th><th>當日開通</th></tr></thead>
-        <tbody id="lineTableBody"></tbody>
-      </table>
-    </div>
+    <canvas id="dailyRegChart" height="120"></canvas>
   </div>
 </div>
 
@@ -937,30 +899,32 @@ svg { display: block; flex-shrink: 0; }
 <script>
 // ─── PALETTE ───
 const C = {
-  gin:      '#8B7FC8',
-  ginLt:    'rgba(139,127,200,.22)',
-  ginFill:  'rgba(139,127,200,.07)',
-  pl:       '#C4708C',
-  plLt:     'rgba(196,112,140,.22)',
-  plFill:   'rgba(196,112,140,.07)',
-  plSocial: '#2AABB0',          /* 4. PL社群 — teal，與粉紅明顯區分 */
-  gold:     '#E8A020',
-  green:    '#06C755',
-  red:      '#E05A5A',
-  grid:     '#EDEBF5',
+  gin:      '#A78BFA',
+  ginLt:    'rgba(167,139,250,.25)',
+  ginFill:  'rgba(167,139,250,.08)',
+  pl:       '#F472B6',
+  plLt:     'rgba(244,114,182,.25)',
+  plFill:   'rgba(244,114,182,.08)',
+  plSocial: '#22D3EE',          /* 4. PL社群 — cyan，與粉紅明顯區分 */
+  gold:     '#FBBF24',
+  green:    '#10B981',
+  red:      '#F87171',
+  grid:     'rgba(255,255,255,0.05)',
   brand: {
-    GreenGold:  '#C4708C',
-    Ovie:       '#3A8C6E',
-    CHESS:      '#6055B0',
-    Miidel:     '#A07850',
-    F0T1:       '#D4620A',
-    PocketMeal: '#1E8A8A'
+    GreenGold:  '#F472B6',
+    Ovie:       '#34D399',
+    CHESS:      '#A78BFA',
+    Miidel:     '#FBBF24',
+    F0T1:       '#FB923C',
+    PocketMeal: '#22D3EE'
   }
 };
 
 // ─── GOOGLE SHEETS CONFIG ───
 const SHEET_ID   = '1QiI2qe8ntPZGjiN1Nm_fcaMSeTnbXhW9Ar-eN7TNMoY';
 const SHEET_NAME = '_Dashboard';   // 摘要分頁名稱
+const REG_SHEET_ID   = '1L_SZE8PqjGwfTk7fCKQBwLDLNVgrGTNTihoQoCmr3Ig';
+const REG_SHEET_NAME = '2026 每日註冊人數統計';
 
 // 抓取單一分頁 CSV，回傳二維陣列 [[row], [row], ...]
 async function fetchSheet(sheetName) {
@@ -996,11 +960,30 @@ function n(v) { return parseFloat(String(v).replace(/[$,]/g,'')) || 0; }
 // 動態資料載入狀態
 let dataLoaded = false;
 
+// 強制隱藏 loading overlay（timeout fallback 用）
+function hideLoading() {
+  const ov = document.getElementById('loadingOverlay');
+  if(ov && ov.style.display !== 'none') {
+    ov.style.opacity = '0';
+    setTimeout(()=>{ ov.style.display='none'; }, 300);
+  }
+}
+
 // 從 _Dashboard 分頁更新全域資料，然後重繪圖表
 async function loadFromSheets() {
+  // 8 秒 timeout：若 Sheets 讀不到，直接用本機備份資料顯示
+  const timeoutId = setTimeout(() => {
+    console.warn('Sheets 讀取逾時，使用本機備份資料');
+    hideLoading();
+    const mb = document.getElementById('mobileUpdateBadge');
+    if(mb) mb.textContent = '備用資料';
+    document.getElementById('updateTime').textContent = '⚠️ 備用資料（Sheets 未連線）';
+  }, 8000);
+
   try {
     document.getElementById('loadingBar').style.width = '30%';
     const rows = await fetchSheet(SHEET_NAME);
+    clearTimeout(timeoutId);
     document.getElementById('loadingBar').style.width = '70%';
 
     // ── 區塊1：月業績 (行標題: section=monthly, brand, channel, m1~m12)
@@ -1078,6 +1061,22 @@ async function loadFromSheets() {
       // 若目前顯示月份已更新，同步 weekGIN/weekPL
       const curWd = ALL_WEEK_DATA[currentWeekMonth];
       if(curWd){ curWd.gin.forEach((v,i)=>{weekGIN[i]=v;}); curWd.pl.forEach((v,i)=>{weekPL[i]=v;}); }
+    }
+
+    // ── 區塊5：每日開通人數 (section=dailyreg, date, count)
+    // 由 Apps Script 從行政 Sheets 讀取後寫入 _Dashboard
+    const regRaw = rows.filter(r => r[0]==='dailyreg');
+    if(regRaw.length > 0){
+      const regDates = [], regCounts = [];
+      regRaw.forEach(r => {
+        const d = r[2] || r['date'] || '';
+        const c = n(r[3] !== undefined ? r[3] : r['count']);
+        if(d && c > 0){ regDates.push(d); regCounts.push(c); }
+      });
+      if(regDates.length > 0) renderDailyRegFromData(regDates, regCounts);
+    } else {
+      // 若 _Dashboard 沒有 dailyreg（Apps Script 尚未執行），嘗試直接讀行政 Sheets
+      loadDailyRegData();
     }
 
     document.getElementById('loadingBar').style.width = '100%';
@@ -1200,16 +1199,16 @@ const CD = {
   plugins: {
     legend: { display: false },
     tooltip: {
-      backgroundColor: '#fff',
-      titleColor: '#1C1B2E', bodyColor: '#6B6880',
-      borderColor: '#E2DEEF', borderWidth: 1,
-      padding: 11, cornerRadius: 10,
+      backgroundColor: '#1A1A2A',
+      titleColor: '#F0EEFF', bodyColor: '#9D9AB5',
+      borderColor: 'rgba(167,139,250,.3)', borderWidth: 1,
+      padding: 12, cornerRadius: 12,
       callbacks: { label: ctx => '  '+fmtNTD(ctx.raw) }
     }
   },
   scales: {
-    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
-    y: { grid:{color:'#EDEBF5'}, ticks:{font:{size:11},color:'#9E9AB5',callback:v=>fmt(v)}, border:{display:false} }
+    x: { grid:{display:false}, ticks:{font:{size:11},color:'#6B6880'} },
+    y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{font:{size:11},color:'#6B6880',callback:v=>fmt(v)}, border:{display:false} }
   }
 };
 
@@ -1242,44 +1241,6 @@ function initOverview() {
       options:{ ...CD, elements:{ line:{tension:.4}, point:{radius:5,hoverRadius:7} } }
     }
   );
-  // Pie 共用設定
-  const makePieOpts = (total) => ({
-    responsive:true, maintainAspectRatio:true, cutout:'58%',
-    plugins:{
-      legend:{ display:true, position: window.innerWidth<=768 ? 'bottom' : 'right',
-        labels:{ font:{size:11}, color:'#1C1B2E', boxWidth:10, padding:10 }
-      },
-      tooltip:{
-        backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
-        borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
-        callbacks:{ label: ctx => '  '+fmtNTD(ctx.raw)+' ('+(ctx.raw/total*100).toFixed(1)+'%)' }
-      }
-    }
-  });
-
-  // GIN 圓餅（全年加總）
-  const ginVals  = brands.map(b=>sum(gin2026[b]));
-  const ginTotal = sum(ginVals);
-  new Chart(document.getElementById('ovPieGIN').getContext('2d'), {
-    type:'doughnut',
-    data:{ labels:brands, datasets:[{
-      data:ginVals, backgroundColor:brands.map(b=>C.brand[b]),
-      borderWidth:3, borderColor:'#fff', hoverOffset:6
-    }]},
-    options: makePieOpts(ginTotal)
-  });
-
-  // PL 圓餅（全年加總）
-  const plVals  = brands.map(b=>sum(pl2026[b]));
-  const plTotal = sum(plVals);
-  new Chart(document.getElementById('ovPiePL').getContext('2d'), {
-    type:'doughnut',
-    data:{ labels:brands, datasets:[{
-      data:plVals, backgroundColor:brands.map(b=>C.brand[b]),
-      borderWidth:3, borderColor:'#fff', hoverOffset:6
-    }]},
-    options: makePieOpts(plTotal)
-  });
   // Week bar
   weekBarChartInst = new Chart(document.getElementById('weekBarChart').getContext('2d'), {
     type:'bar',
@@ -1292,6 +1253,18 @@ function initOverview() {
       tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}
     }}
   });
+
+  // 找最新有資料的月份
+  ovCurrentMonth = ginMonthly.reduce((last,v,i)=>v>0?i+1:last, 1);
+  // 設定月份 tab 預設 active
+  document.querySelectorAll('#ovMonthSelectTabs .tab-btn').forEach((btn,i)=>{
+    if(i+1 === ovCurrentMonth) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+  updateOvKPI(ovCurrentMonth);
+  updateOvPies(ovCurrentMonth);
+  // 預設本月模式：顯示月份 tab
+  document.getElementById('ovMonthSelectTabs').style.display = 'inline-flex';
 }
 
 function buildOvMonthData(mode) {
@@ -1309,6 +1282,108 @@ function switchOvChart(mode, el) {
   el.classList.add('active');
   ovMonthChart.data = buildOvMonthData(mode);
   ovMonthChart.update();
+}
+
+// ─── OVERVIEW MONTH/YEAR SWITCH ───
+let ovCurrentView = 'month';
+let ovCurrentMonth = null;
+
+function switchOvView(mode, el) {
+  el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ovCurrentView = mode;
+  const monthTabs = document.getElementById('ovMonthSelectTabs');
+  if(mode === 'month') {
+    monthTabs.style.display = 'inline-flex';
+    updateOvKPI(ovCurrentMonth);
+    updateOvPies(ovCurrentMonth);
+  } else {
+    monthTabs.style.display = 'none';
+    updateOvKPI(null);
+    updateOvPies(null);
+  }
+}
+
+function switchOvMonth(m, el) {
+  document.querySelectorAll('#ovMonthSelectTabs .tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ovCurrentMonth = m;
+  updateOvKPI(m);
+  updateOvPies(m);
+}
+
+function updateOvKPI(month) {
+  const isYear = (month === null);
+  const ginVals = isYear ? ginMonthly : [ginMonthly[month-1]];
+  const plVals  = isYear ? plMonthly  : [plMonthly[month-1]];
+  const ginTotal = ginVals.reduce((a,c)=>a+c,0);
+  const plTotal  = plVals.reduce((a,c)=>a+c,0);
+
+  const bs = Object.keys(gin2025);
+  const gin25 = isYear ? bs.reduce((a,b)=>a+gin2025[b].reduce((x,y)=>x+y,0),0)
+                       : bs.reduce((a,b)=>a+gin2025[b][month-1],0);
+  const pl25  = isYear ? bs.reduce((a,b)=>a+pl2025[b].reduce((x,y)=>x+y,0),0)
+                       : bs.reduce((a,b)=>a+pl2025[b][month-1],0);
+
+  const ginPct = gin25>0 ? ((ginTotal-gin25)/gin25*100).toFixed(1) : null;
+  const plPct  = pl25>0  ? ((plTotal-pl25)/pl25*100).toFixed(1) : null;
+
+  const mLabel = isYear ? '全年' : MONTHS[month-1];
+  document.getElementById('ovKpiGinLabel').textContent = `GIN ${mLabel}業績`;
+  document.getElementById('ovKpiGinVal').textContent   = '$'+fmt(ginTotal);
+  const dg = document.getElementById('ovKpiGinDelta');
+  if(ginPct!==null) {
+    const up = parseFloat(ginPct)>=0;
+    dg.className = `kpi-delta ${up?'up':'dn'}`;
+    dg.innerHTML = `${up?'<svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>':'<svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>'}vs 2025 同期 ${up?'+':''}${ginPct}%`;
+  } else { dg.className='kpi-delta neu'; dg.textContent='— 尚無同期資料'; }
+
+  document.getElementById('ovKpiPlLabel').textContent = `PL ${mLabel}業績`;
+  document.getElementById('ovKpiPlVal').textContent   = '$'+fmt(plTotal);
+  const dp = document.getElementById('ovKpiPlDelta');
+  if(plPct!==null) {
+    const up = parseFloat(plPct)>=0;
+    dp.className = `kpi-delta ${up?'up':'dn'}`;
+    dp.innerHTML = `${up?'<svg viewBox="0 0 11 11"><polyline points="1.5,7.5 5.5,3.5 9.5,7.5"/></svg>':'<svg viewBox="0 0 11 11"><polyline points="1.5,3.5 5.5,7.5 9.5,3.5"/></svg>'}vs 2025 同期 ${up?'+':''}${plPct}%`;
+  } else { dp.className='kpi-delta neu'; dp.textContent='— 尚無同期資料'; }
+
+  const codeIdx = isYear ? memberData.plCode.reduce((last,v,i)=>v>0?i:last,0) : month-1;
+  document.getElementById('ovKpiCodeVal').textContent   = memberData.plCode[codeIdx].toLocaleString();
+  document.getElementById('ovKpiCodeDelta').textContent = isYear ? '— 最新快照' : `${MONTHS[codeIdx]} 月末`;
+  document.getElementById('ovKpiSocialVal').textContent   = memberData.plSocial[codeIdx].toLocaleString();
+  document.getElementById('ovKpiSocialDelta').textContent = isYear ? '— 最新快照' : `${MONTHS[codeIdx]} 月末`;
+}
+
+function updateOvPies(month) {
+  const isYear = (month === null);
+  const mLabel = isYear ? '全年' : MONTHS[month-1];
+  document.getElementById('ovPieGINTitle').textContent = `${mLabel} 品牌佔比 GIN`;
+  document.getElementById('ovPiePLTitle').textContent  = `${mLabel} 品牌佔比 PL`;
+
+  const ginCtx = document.getElementById('ovPieGIN');
+  const plCtx  = document.getElementById('ovPiePL');
+  Chart.getChart(ginCtx)?.destroy();
+  Chart.getChart(plCtx)?.destroy();
+
+  const ginVals = brands.map(b => isYear ? sum(gin2026[b]) : gin2026[b][month-1]);
+  const plVals  = brands.map(b => isYear ? sum(pl2026[b])  : pl2026[b][month-1]);
+  const ginTotal = sum(ginVals), plTotal = sum(plVals);
+
+  const makePieOpts = (total) => ({
+    responsive:true, maintainAspectRatio:true, cutout:'58%',
+    plugins:{
+      legend:{ display:true, position: window.innerWidth<=768 ? 'bottom' : 'right',
+        labels:{ font:{size:11}, color:'#1C1B2E', boxWidth:10, padding:10 }
+      },
+      tooltip:{
+        backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
+        borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+        callbacks:{ label: ctx => '  '+fmtNTD(ctx.raw)+' ('+(total>0?(ctx.raw/total*100).toFixed(1):0)+'%)' }
+      }
+    }
+  });
+  new Chart(ginCtx.getContext('2d'), { type:'doughnut', data:{ labels:brands, datasets:[{ data:ginVals, backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:'#fff', hoverOffset:6 }]}, options:makePieOpts(ginTotal) });
+  new Chart(plCtx.getContext('2d'),  { type:'doughnut', data:{ labels:brands, datasets:[{ data:plVals,  backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:'#fff', hoverOffset:6 }]}, options:makePieOpts(plTotal) });
 }
 
 // ─── BRANDS ───
@@ -1366,8 +1441,10 @@ function buildBrandTable() {
       ${p.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td><b>${fmtNTD(sum(p))}</b></td>
     </tr>`;
   });
-  const mth=MONTHS.map((_,i)=>brands.reduce((a,b)=>a+gin2026[b][i],0));
-  html += `<tr class="total-row"><td>合計 GIN</td>${mth.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td>${fmtNTD(sum(mth))}</td></tr>`;
+  const mthGin=MONTHS.map((_,i)=>brands.reduce((a,b)=>a+gin2026[b][i],0));
+  const mthPl =MONTHS.map((_,i)=>brands.reduce((a,b)=>a+pl2026[b][i],0));
+  html += `<tr class="total-row"><td>合計 GIN</td>${mthGin.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td>${fmtNTD(sum(mthGin))}</td></tr>`;
+  html += `<tr class="total-row" style="color:var(--pl-dk);background:var(--pl-lt)"><td>合計 PL</td>${mthPl.map(v=>'<td>'+fmtNTD(v)+'</td>').join('')}<td>${fmtNTD(sum(mthPl))}</td></tr>`;
   document.getElementById('brandTableBody').innerHTML = html;
 }
 
@@ -1465,6 +1542,82 @@ function initMembers() {
       }
     }
   });
+}
+
+// ─── DAILY REGISTRATION ───
+let dailyRegChartInst = null;
+
+// 直接從整理好的日期/數量陣列繪製圖表（供 _Dashboard 讀取後呼叫）
+function renderDailyRegFromData(dates, counts) {
+  if(!dates || dates.length === 0) {
+    document.getElementById('dailyRegSub').textContent = '尚無資料';
+    return;
+  }
+  document.getElementById('dailyRegSub').textContent =
+    `${dates[0]} ~ ${dates[dates.length-1]} · 共 ${dates.length} 天有開通記錄（由 Apps Script 同步）`;
+  if(dailyRegChartInst){ dailyRegChartInst.destroy(); dailyRegChartInst=null; }
+  dailyRegChartInst = new Chart(document.getElementById('dailyRegChart').getContext('2d'), {
+    type:'bar',
+    data:{ labels:dates, datasets:[{
+      label:'當日開通人數', data:counts,
+      backgroundColor:'rgba(196,112,140,.75)', borderRadius:5, barPercentage:.7
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
+          borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+          callbacks:{ label: ctx => `  開通 ${ctx.raw} 人` }
+        }
+      },
+      scales:{
+        x:{ grid:{display:false}, ticks:{font:{size:10},color:'#9E9AB5',maxTicksLimit:24,maxRotation:45} },
+        y:{ grid:{color:'#EDEBF5'}, border:{display:false}, ticks:{font:{size:11},color:'#9E9AB5',stepSize:1} }
+      }
+    }
+  });
+}
+
+// 直接從行政 Sheets 讀取（Apps Script 尚未執行時的備援）
+async function loadDailyRegData() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${REG_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(REG_SHEET_NAME)}`;
+    const res  = await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    const rows = text.trim().split('\n').map(row =>
+      row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+         .map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim())
+    );
+
+    const dailyData = {};
+    let dateHeader = null;
+    rows.forEach(row => {
+      const hasDate = row.slice(1).some(c => /^\d{1,2}\/\d{1,2}$/.test(c));
+      if(hasDate) { dateHeader = row; return; }
+      if(dateHeader && row[0]==='開通人數') {
+        dateHeader.forEach((d, ci) => {
+          if(ci === 0) return;
+          if(/^\d{1,2}\/\d{1,2}$/.test(d.trim())) {
+            const val = parseInt(row[ci]) || 0;
+            if(val > 0) dailyData[d.trim()] = (dailyData[d.trim()]||0) + val;
+          }
+        });
+        dateHeader = null;
+      }
+    });
+
+    const sorted = Object.keys(dailyData).sort((a,b)=>{
+      const [am,ad]=a.split('/').map(Number), [bm,bd]=b.split('/').map(Number);
+      return am!==bm?am-bm:ad-bd;
+    });
+    renderDailyRegFromData(sorted, sorted.map(d=>dailyData[d]));
+  } catch(e) {
+    console.warn('每日開通資料讀取失敗（備援）', e);
+    document.getElementById('dailyRegSub').textContent = '請先執行 Apps Script syncDashboard() 以載入開通資料';
+  }
 }
 
 // ─── LINE ───
@@ -1602,20 +1755,25 @@ function switchWeekMonth(month, el) {
 
 // ─── BOOT ───
 window.addEventListener('DOMContentLoaded', async () => {
-  // 先用本機備份資料畫一次，確保頁面不白屏
-  initOverview(); initBrands(); initHistory(); initMembers(); initLine();
-  // 再從 Sheets 抓最新資料，重繪
+  // 先用本機備份資料畫一次，確保頁面不白屏（不等 Sheets）
+  initOverview(); initBrands(); initHistory(); initMembers();
+  // 這一行移到 initLine 後面的保留宣告，initLine 已移除
+
+  // 再從 Sheets 抓最新資料，重繪（loadFromSheets 內有 8 秒 timeout 保護）
   await loadFromSheets();
   if(dataLoaded){
     // 銷毀並重建所有圖表
     Chart.instances && Object.values(Chart.instances).forEach(c=>c.destroy());
-    initOverview(); initBrands(); initHistory(); initMembers(); initLine();
+    initOverview(); initBrands(); initHistory(); initMembers();
     // 更新 sidebar 更新時間
     const now = new Date();
     const ts  = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     document.getElementById('updateTime').textContent = '更新：'+ts;
     const mb = document.getElementById('mobileUpdateBadge');
-    if(mb) mb.textContent = ts.slice(5); // 顯示 MM/DD HH:mm
+    if(mb) mb.textContent = ts.slice(5);
+  } else {
+    // Sheets 載入失敗（超時），確保 loading 已隱藏
+    hideLoading();
   }
 });
 </script>
