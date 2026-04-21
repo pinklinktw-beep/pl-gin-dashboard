@@ -1075,11 +1075,17 @@ async function loadFromSheets() {
 
     // ── 區塊1：月業績
     // APS 格式（每列）: [0]=section_type, [1]=brandName, [2]=channelYear, [3..14]=m1~m12
-    // section header 列: [0]='section', [1]='brand', [2]='channel_or_metric', [3]='m1'...
-    rows.filter(r => r[0]==='brand').forEach(r => {
-      const brand = r[1];
+    // 若 B 欄空白（APS bug），用位置順序推算 brand 名稱
+    // 順序固定：GreenGold, Ovie, CHESS, Miidel, F0T1, PocketMeal（每品牌 GIN/PL 各一列）
+    const BRAND_ORDER = ['GreenGold','Ovie','CHESS','Miidel','F0T1','PocketMeal'];
+    const brandRows = rows.filter(r => r[0]==='brand');
+    let brandIdx = 0;
+    brandRows.forEach(r => {
+      // B欄有值直接用，空白則用位置推算
+      let brand = r[1] && r[1].trim() !== '' ? r[1].trim() : BRAND_ORDER[Math.floor(brandIdx/2)];
       const ch    = r[2]; // e.g. 'GIN2026', 'PL2026'
       const vals  = r.slice(3,15).map(v => n(v));
+      brandIdx++;
       if(!brand || !ch) return;
       if (ch==='GIN2026' && gin2026[brand]!==undefined) gin2026[brand] = vals;
       if (ch==='GIN2025' && gin2025[brand]!==undefined) gin2025[brand] = vals;
@@ -1096,8 +1102,12 @@ async function loadFromSheets() {
 
     // ── 區塊2：會員人數
     // APS 格式: [0]='member', [1]=key(plCode etc), [2]='', [3..14]=m1~m12
-    rows.filter(r => r[0]==='member').forEach(r => {
-      const key  = r[1]; // plCode / plCodeNew / plSocial / ginCode
+    // 若 B 欄空白（APS bug），用位置順序推算
+    // APS 寫入順序：plCode, plCodeNew, plSocial, ginCode
+    const MEMBER_ORDER = ['plCode','plCodeNew','plSocial','ginCode'];
+    const memberRows = rows.filter(r => r[0]==='member');
+    memberRows.forEach((r, i) => {
+      const key  = (r[1] && r[1].trim() !== '') ? r[1].trim() : (MEMBER_ORDER[i] || '');
       const vals = r.slice(3,15).map(v => n(v));
       if (key==='plCode')    memberData.plCode    = vals;
       if (key==='plSocial')  memberData.plSocial  = vals;
