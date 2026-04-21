@@ -7,31 +7,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* ══════════════════════════════════
-   DESIGN TOKENS
+   DESIGN TOKENS  (Light default)
 ══════════════════════════════════ */
 :root {
-  /* ── Primary palette: neon purple & neon pink on dark bg ── */
-  --gin:       #A78BFA;   /* GIN  = neon purple          */
-  --gin-lt:    rgba(167,139,250,.15);
-  --gin-dk:    #7C3AED;
-  --gin-glow:  rgba(167,139,250,.35);
-  --pl:        #F472B6;   /* PL   = neon pink            */
-  --pl-lt:     rgba(244,114,182,.15);
-  --pl-dk:     #DB2777;
-  --pl-glow:   rgba(244,114,182,.35);
+  /* ── Primary brand colours ── */
+  --gin:       #7C3AED;   /* GIN  = purple               */
+  --gin-lt:    rgba(124,58,237,.10);
+  --gin-dk:    #5B21B6;
+  --gin-glow:  rgba(124,58,237,.25);
+  --pl:        #DB2777;   /* PL   = pink                 */
+  --pl-lt:     rgba(219,39,119,.10);
+  --pl-dk:     #9D174D;
+  --pl-glow:   rgba(219,39,119,.25);
 
-  --surface-0: #13131F;   /* card bg */
-  --surface-1: #0D0D14;   /* page bg */
-  --surface-2: #1E1E2E;   /* hover */
-  --surface-3: #1A1A2A;   /* sidebar */
-  --border:    rgba(255,255,255,0.07);
-  --muted:     #6B6880;
-  --text:      #F0EEFF;
-  --text-2:    #9D9AB5;
+  /* ── Light surfaces ── */
+  --surface-0: #FFFFFF;   /* card bg */
+  --surface-1: #F5F4FA;   /* page bg */
+  --surface-2: #EDE9F8;   /* hover / tab bg */
+  --surface-3: #FFFFFF;   /* sidebar */
+  --border:    rgba(0,0,0,0.08);
+  --muted:     #8B85A0;
+  --text:      #1C1B2E;
+  --text-2:    #6B6880;
 
   /* status */
-  --up:        #34D399;
-  --dn:        #F87171;
+  --up:        #059669;
+  --dn:        #DC2626;
   --neu:       #6B7280;
   --line-grn:  #10B981;
 
@@ -43,6 +44,30 @@
   --r-md:  16px;
   --r-lg:  22px;
   --r-xl:  28px;
+}
+
+/* ══════════════════════════════════
+   DARK MODE OVERRIDE
+══════════════════════════════════ */
+html.dark {
+  --gin:       #A78BFA;
+  --gin-lt:    rgba(167,139,250,.15);
+  --gin-dk:    #7C3AED;
+  --gin-glow:  rgba(167,139,250,.35);
+  --pl:        #F472B6;
+  --pl-lt:     rgba(244,114,182,.15);
+  --pl-dk:     #DB2777;
+  --pl-glow:   rgba(244,114,182,.35);
+  --surface-0: #13131F;
+  --surface-1: #0D0D14;
+  --surface-2: #1E1E2E;
+  --surface-3: #1A1A2A;
+  --border:    rgba(255,255,255,0.07);
+  --muted:     #6B6880;
+  --text:      #F0EEFF;
+  --text-2:    #9D9AB5;
+  --up:        #34D399;
+  --dn:        #F87171;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,8 +96,9 @@ svg { display: block; flex-shrink: 0; }
   top: 0; left: 0;
   height: 100vh;
   z-index: 100;
-  box-shadow: 4px 0 24px rgba(90,72,160,.06);
+  box-shadow: 4px 0 16px rgba(0,0,0,.06);
 }
+html.dark .sidebar { box-shadow: 4px 0 24px rgba(0,0,0,.3); }
 
 /* logo */
 .sb-logo {
@@ -92,13 +118,13 @@ svg { display: block; flex-shrink: 0; }
 .sb-logo-pill svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .sb-logo-pill span { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
 .sb-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; padding-left: 2px; }
-.sb-sub   { font-size: 11px; color: rgba(255,255,255,0.25); padding-left: 2px; margin-top: 2px; }
+.sb-sub   { font-size: 11px; color: var(--text-2); padding-left: 2px; margin-top: 2px; opacity: .6; }
 
 /* nav */
 .sb-nav { flex: 1; padding: 12px 12px 0; overflow-y: auto; }
 .sb-section-label {
   font-size: 10px; font-weight: 600; letter-spacing: .1em;
-  color: rgba(255,255,255,0.25); text-transform: uppercase;
+  color: var(--text-2); opacity: .55; text-transform: uppercase;
   padding: 14px 8px 6px;
 }
 .nav-item {
@@ -113,7 +139,7 @@ svg { display: block; flex-shrink: 0; }
 }
 .nav-item:hover { background: var(--surface-2); color: var(--text); }
 .nav-item.active {
-  background: rgba(167,139,250,.15);
+  background: var(--gin-lt);
   color: var(--gin);
   font-weight: 600;
 }
@@ -127,7 +153,7 @@ svg { display: block; flex-shrink: 0; }
 }
 .sb-cloud-label {
   font-size: 10px; font-weight: 600; letter-spacing: .1em;
-  color: rgba(255,255,255,0.25); text-transform: uppercase;
+  color: var(--text-2); opacity: .55; text-transform: uppercase;
   padding: 0 8px 8px;
 }
 .cloud-link {
@@ -145,7 +171,7 @@ svg { display: block; flex-shrink: 0; }
 .cloud-link .link-badge {
   margin-left: auto;
   font-size: 10px; padding: 2px 7px;
-  background: var(--gin-lt); color: var(--gin);
+  background: var(--gin-lt); color: var(--gin-dk);
   border-radius: 20px; font-weight: 600;
 }
 
@@ -201,7 +227,7 @@ svg { display: block; flex-shrink: 0; }
   overflow: hidden;
   transition: box-shadow .18s;
 }
-.kpi-card:hover { box-shadow: 0 0 0 1px rgba(167,139,250,.3), 0 8px 24px rgba(167,139,250,.12); }
+.kpi-card:hover { box-shadow: 0 0 0 1px var(--gin-glow), 0 8px 24px var(--gin-lt); }
 .kpi-card-accent {
   position: absolute; top: 0; right: 0;
   width: 72px; height: 72px;
@@ -236,7 +262,7 @@ svg { display: block; flex-shrink: 0; }
   transition: box-shadow .18s;
   backdrop-filter: blur(0);
 }
-.card:hover { box-shadow: 0 4px 24px rgba(167,139,250,.08); }
+.card:hover { box-shadow: 0 4px 24px var(--gin-lt); }
 .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
 .card-title { font-size: 13.5px; font-weight: 600; color: var(--text); }
 .card-sub   { font-size: 11px; color: var(--text-2); margin-top: 2px; }
@@ -261,7 +287,7 @@ svg { display: block; flex-shrink: 0; }
 .tab-btn.active {
   background: var(--surface-0); color: var(--gin);
   font-weight: 600;
-  box-shadow: 0 1px 8px rgba(167,139,250,.2);
+  box-shadow: 0 1px 8px var(--gin-lt);
 }
 
 /* ── BRAND TAGS ── */
@@ -284,7 +310,7 @@ svg { display: block; flex-shrink: 0; }
 /* ── TABLE ── */
 .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .data-table th {
-  background: rgba(167,139,250,.12); color: var(--gin);
+  background: var(--gin-lt); color: var(--gin);
   font-weight: 600; padding: 9px 11px;
   text-align: right; border-bottom: 1px solid var(--border);
   white-space: nowrap;
@@ -295,7 +321,7 @@ svg { display: block; flex-shrink: 0; }
 .data-table td:first-child { text-align: left; font-weight: 500; }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table tr.mom-row  td { color: var(--text-2); font-size: 11px; background: var(--surface-2); font-weight: 500; }
-.data-table tr.total-row td { font-weight: 700; background: rgba(167,139,250,.12); color: var(--gin); }
+.data-table tr.total-row td { font-weight: 700; background: var(--gin-lt); color: var(--gin); }
 .data-table tbody tr:hover td { background: var(--surface-2); }
 .pos { color: var(--up); font-weight: 600; }
 .neg { color: var(--dn); font-weight: 600; }
@@ -303,7 +329,7 @@ svg { display: block; flex-shrink: 0; }
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
 
 /* ══════════════════════════════════
    RESPONSIVE — TABLET
@@ -381,7 +407,7 @@ svg { display: block; flex-shrink: 0; }
     background: var(--surface-3);
     border-top: 1px solid var(--border);
     z-index: 100;
-    box-shadow: 0 -4px 20px rgba(0,0,0,.4);
+    box-shadow: 0 -4px 20px rgba(0,0,0,.08);
     padding-bottom: env(safe-area-inset-bottom, 4px);
   }
   .mobile-tab {
@@ -465,9 +491,11 @@ canvas { background: transparent; }
 /* ── KPI card top accent deeper ── */
 .kpi-card-accent { opacity: .12; }
 
-/* ── Scrollbar for dark theme ── */
-::-webkit-scrollbar-thumb { background: rgba(167,139,250,.25); }
-::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,.45); }
+/* ── Scrollbar ── */
+::-webkit-scrollbar-thumb { background: rgba(124,58,237,.18); }
+::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,.35); }
+html.dark ::-webkit-scrollbar-thumb { background: rgba(167,139,250,.25); }
+html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,.45); }
 
 /* ── Brand tag hover glow ── */
 .brand-tag:hover { box-shadow: 0 0 0 1px currentColor; }
@@ -479,18 +507,34 @@ canvas { background: transparent; }
 </head>
 <style>
 #loadingOverlay {
-  position: fixed; inset: 0; background: rgba(13,13,20,.92);
+  position: fixed; inset: 0;
+  background: rgba(245,244,250,.95);
   z-index: 9999; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 16px;
   transition: opacity .3s;
 }
+html.dark #loadingOverlay { background: rgba(13,13,20,.95); }
 #loadingBar {
   width: 0%; height: 4px; background: var(--gin);
   border-radius: 2px; transition: width .4s ease;
   max-width: 240px;
 }
-.loading-track { width: 240px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.loading-track { width: 240px; height: 4px; background: rgba(0,0,0,0.08); border-radius: 2px; overflow: hidden; }
+html.dark .loading-track { background: rgba(255,255,255,0.08); }
 .loading-text { font-size: 13px; color: var(--text); }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 14px; margin: 8px 12px;
+  border-radius: var(--r-sm); border: 1px solid var(--border);
+  background: var(--surface-2); cursor: pointer;
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  transition: background .15s, color .15s;
+  width: calc(100% - 24px);
+}
+.theme-toggle:hover { background: var(--gin-lt); color: var(--gin); }
+.theme-toggle svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 </style>
 <body>
 
@@ -574,6 +618,12 @@ canvas { background: transparent; }
     </div>
   </nav>
 
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">
+    <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span id="themeLabel">深色模式</span>
+  </button>
+
   <!-- Cloud Links -->
   <div class="sb-cloud">
     <div class="sb-cloud-label">雲端資料</div>
@@ -602,11 +652,11 @@ canvas { background: transparent; }
   <div class="page-header">
     <div>
       <div class="page-title">總覽</div>
-      <div class="page-sub" id="overviewPageSub">2026 年度累計 · 至 4 月 W2（4/16）</div>
+      <div class="page-sub" id="overviewPageSub">2026 年度累計 · 載入中…</div>
     </div>
-    <span class="pill-badge">
+    <span class="pill-badge" id="overviewDateBadge">
       <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="3" fill="var(--up)" stroke="none"/></svg>
-      截至 4 / 16
+      <span id="overviewDateText">載入中</span>
     </span>
   </div>
 
@@ -897,28 +947,65 @@ canvas { background: transparent; }
      JAVASCRIPT
 ══════════════════════════════════════════════ -->
 <script>
-// ─── PALETTE ───
-const C = {
-  gin:      '#A78BFA',
-  ginLt:    'rgba(167,139,250,.25)',
-  ginFill:  'rgba(167,139,250,.08)',
-  pl:       '#F472B6',
-  plLt:     'rgba(244,114,182,.25)',
-  plFill:   'rgba(244,114,182,.08)',
-  plSocial: '#22D3EE',          /* 4. PL社群 — cyan，與粉紅明顯區分 */
-  gold:     '#FBBF24',
-  green:    '#10B981',
-  red:      '#F87171',
-  grid:     'rgba(255,255,255,0.05)',
-  brand: {
-    GreenGold:  '#F472B6',
-    Ovie:       '#34D399',
-    CHESS:      '#A78BFA',
-    Miidel:     '#FBBF24',
-    F0T1:       '#FB923C',
-    PocketMeal: '#22D3EE'
+// ─── THEME ───
+function isDark() { return document.documentElement.classList.contains('dark'); }
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.classList.toggle('dark');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  document.getElementById('themeLabel').textContent = dark ? '淺色模式' : '深色模式';
+  // moon / sun icon swap
+  document.getElementById('themeIcon').innerHTML = dark
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  // rebuild charts so colours (tooltip bg etc.) update
+  Chart.instances && Object.values(Chart.instances).forEach(c=>c.destroy());
+  initOverview(); initBrands(); initHistory(); initMembers();
+  updateOverviewDate();
+}
+// init from localStorage
+(function(){
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark') {
+    document.documentElement.classList.add('dark');
   }
-};
+})();
+
+// ─── PALETTE ───
+// Returns theme-aware values
+function getC() {
+  const dark = isDark();
+  return {
+    gin:      dark ? '#A78BFA' : '#7C3AED',
+    ginLt:    dark ? 'rgba(167,139,250,.25)' : 'rgba(124,58,237,.18)',
+    ginFill:  dark ? 'rgba(167,139,250,.08)' : 'rgba(124,58,237,.06)',
+    pl:       dark ? '#F472B6' : '#DB2777',
+    plLt:     dark ? 'rgba(244,114,182,.25)' : 'rgba(219,39,119,.18)',
+    plFill:   dark ? 'rgba(244,114,182,.08)' : 'rgba(219,39,119,.06)',
+    plSocial: '#0891B2',
+    gold:     dark ? '#FBBF24' : '#D97706',
+    green:    dark ? '#34D399' : '#059669',
+    red:      dark ? '#F87171' : '#DC2626',
+    grid:     dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)',
+    tooltipBg:    dark ? '#1A1A2A' : '#FFFFFF',
+    tooltipTitle: dark ? '#F0EEFF' : '#1C1B2E',
+    tooltipBody:  dark ? '#9D9AB5' : '#6B6880',
+    tooltipBorder:dark ? 'rgba(167,139,250,.3)' : 'rgba(0,0,0,0.10)',
+    legendText:   dark ? '#9D9AB5' : '#1C1B2E',
+    tickColor:    dark ? '#6B6880' : '#8B85A0',
+    gridLine:     dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)',
+    brand: {
+      GreenGold:  dark ? '#F472B6' : '#DB2777',
+      Ovie:       dark ? '#34D399' : '#059669',
+      CHESS:      dark ? '#A78BFA' : '#7C3AED',
+      Miidel:     dark ? '#FBBF24' : '#D97706',
+      F0T1:       '#FB923C',
+      PocketMeal: dark ? '#22D3EE' : '#0891B2'
+    }
+  };
+}
+// legacy alias — rebuilt on each chart init
+let C = getC();
 
 // ─── GOOGLE SHEETS CONFIG ───
 const SHEET_ID   = '1QiI2qe8ntPZGjiN1Nm_fcaMSeTnbXhW9Ar-eN7TNMoY';
@@ -986,15 +1073,18 @@ async function loadFromSheets() {
     clearTimeout(timeoutId);
     document.getElementById('loadingBar').style.width = '70%';
 
-    // ── 區塊1：月業績 (行標題: section=monthly, brand, channel, m1~m12)
-    const monthly = parseTable(rows.filter(r => r[0]==='monthly' || r[0]==='brand'));
-    monthly.forEach(r => {
-      const brand = r['brand'], ch = r['channel'];
-      const vals  = [1,2,3,4,5,6,7,8,9,10,11,12].map(i => n(r['m'+i]));
-      if (ch==='GIN2026') gin2026[brand] = vals;
-      if (ch==='GIN2025') gin2025[brand] = vals;
-      if (ch==='PL2026')  pl2026[brand]  = vals;
-      if (ch==='PL2025')  pl2025[brand]  = vals;
+    // ── 區塊1：月業績
+    // APS 格式（每列）: [0]=section_type, [1]=brandName, [2]=channelYear, [3..14]=m1~m12
+    // section header 列: [0]='section', [1]='brand', [2]='channel_or_metric', [3]='m1'...
+    rows.filter(r => r[0]==='brand').forEach(r => {
+      const brand = r[1];
+      const ch    = r[2]; // e.g. 'GIN2026', 'PL2026'
+      const vals  = r.slice(3,15).map(v => n(v));
+      if(!brand || !ch) return;
+      if (ch==='GIN2026' && gin2026[brand]!==undefined) gin2026[brand] = vals;
+      if (ch==='GIN2025' && gin2025[brand]!==undefined) gin2025[brand] = vals;
+      if (ch==='PL2026'  && pl2026[brand]!==undefined)  pl2026[brand]  = vals;
+      if (ch==='PL2025'  && pl2025[brand]!==undefined)  pl2025[brand]  = vals;
     });
 
     // 重算月合計
@@ -1004,11 +1094,11 @@ async function loadFromSheets() {
       plMonthly[i]  = bs.reduce((a,b)=>a+pl2026[b][i],0);
     }
 
-    // ── 區塊2：會員人數 (section=member, brand=metric, m1~m12)
-    const memberRows = parseTable(rows.filter(r => r[0]==='member'));
-    memberRows.forEach(r => {
-      const key = r['brand'] || r['metric'] || r['channel_or_metric'] || '';
-      const vals = [1,2,3,4,5,6,7,8,9,10,11,12].map(i => n(r['m'+i]));
+    // ── 區塊2：會員人數
+    // APS 格式: [0]='member', [1]=key(plCode etc), [2]='', [3..14]=m1~m12
+    rows.filter(r => r[0]==='member').forEach(r => {
+      const key  = r[1]; // plCode / plCodeNew / plSocial / ginCode
+      const vals = r.slice(3,15).map(v => n(v));
       if (key==='plCode')    memberData.plCode    = vals;
       if (key==='plSocial')  memberData.plSocial  = vals;
       if (key==='ginCode')   memberData.ginCode   = vals;
@@ -1193,24 +1283,28 @@ const pct    = (a,b) => b===0?'—':((a-b)/b*100).toFixed(1)+'%';
 const sum    = arr => arr.reduce((a,c)=>a+c,0);
 const brands = Object.keys(gin2026);
 
-// Shared Chart.js config
-const CD = {
+// Shared Chart.js config — rebuilt each time charts are inited
+function getCD() {
+  const c = getC();
+  return {
   responsive: true, maintainAspectRatio: true,
   plugins: {
     legend: { display: false },
     tooltip: {
-      backgroundColor: '#1A1A2A',
-      titleColor: '#F0EEFF', bodyColor: '#9D9AB5',
-      borderColor: 'rgba(167,139,250,.3)', borderWidth: 1,
+      backgroundColor: c.tooltipBg,
+      titleColor: c.tooltipTitle, bodyColor: c.tooltipBody,
+      borderColor: c.tooltipBorder, borderWidth: 1,
       padding: 12, cornerRadius: 12,
       callbacks: { label: ctx => '  '+fmtNTD(ctx.raw) }
     }
   },
   scales: {
-    x: { grid:{display:false}, ticks:{font:{size:11},color:'#6B6880'} },
-    y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{font:{size:11},color:'#6B6880',callback:v=>fmt(v)}, border:{display:false} }
+    x: { grid:{display:false}, ticks:{font:{size:11},color:c.tickColor} },
+    y: { grid:{color:c.gridLine}, ticks:{font:{size:11},color:c.tickColor,callback:v=>fmt(v)}, border:{display:false} }
   }
-};
+  };
+}
+let CD = getCD();
 
 // ─── NAV ───
 function showPage(id, el) {
@@ -1235,6 +1329,7 @@ function showPage(id, el) {
 // ─── OVERVIEW ───
 let ovMonthChart;
 function initOverview() {
+  C = getC(); CD = getCD();
   ovMonthChart = new Chart(
     document.getElementById('ovMonthChart').getContext('2d'),
     { type:'line', data: buildOvMonthData('gin'),
@@ -1249,7 +1344,7 @@ function initOverview() {
       {label:'PL', data:weekPL, backgroundColor:C.pl, borderRadius:8,barPercentage:.55}
     ]},
     options:{ ...CD, plugins:{...CD.plugins,
-      legend:{display:true,labels:{font:{size:12},boxWidth:10,color:'#1C1B2E',padding:14}},
+      legend:{display:true,labels:{font:{size:12},boxWidth:10,color:C.legendText,padding:14}},
       tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}
     }}
   });
@@ -1373,22 +1468,24 @@ function updateOvPies(month) {
     responsive:true, maintainAspectRatio:true, cutout:'58%',
     plugins:{
       legend:{ display:true, position: window.innerWidth<=768 ? 'bottom' : 'right',
-        labels:{ font:{size:11}, color:'#1C1B2E', boxWidth:10, padding:10 }
+        labels:{ font:{size:11}, color:C.legendText, boxWidth:10, padding:10 }
       },
       tooltip:{
-        backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
-        borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+        backgroundColor:C.tooltipBg, titleColor:C.tooltipTitle, bodyColor:C.tooltipBody,
+        borderColor:C.tooltipBorder, borderWidth:1, padding:10, cornerRadius:10,
         callbacks:{ label: ctx => '  '+fmtNTD(ctx.raw)+' ('+(total>0?(ctx.raw/total*100).toFixed(1):0)+'%)' }
       }
     }
   });
-  new Chart(ginCtx.getContext('2d'), { type:'doughnut', data:{ labels:brands, datasets:[{ data:ginVals, backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:'#fff', hoverOffset:6 }]}, options:makePieOpts(ginTotal) });
-  new Chart(plCtx.getContext('2d'),  { type:'doughnut', data:{ labels:brands, datasets:[{ data:plVals,  backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:'#fff', hoverOffset:6 }]}, options:makePieOpts(plTotal) });
+  const pieBorder = isDark() ? '#1A1A2A' : '#FFFFFF';
+  new Chart(ginCtx.getContext('2d'), { type:'doughnut', data:{ labels:brands, datasets:[{ data:ginVals, backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:pieBorder, hoverOffset:6 }]}, options:makePieOpts(ginTotal) });
+  new Chart(plCtx.getContext('2d'),  { type:'doughnut', data:{ labels:brands, datasets:[{ data:plVals,  backgroundColor:brands.map(b=>C.brand[b]), borderWidth:3, borderColor:pieBorder, hoverOffset:6 }]}, options:makePieOpts(plTotal) });
 }
 
 // ─── BRANDS ───
 let brandLineChart, brandCompChart;
 function initBrands() {
+  C = getC(); CD = getCD();
   brandLineChart = new Chart(
     document.getElementById('brandLineChart').getContext('2d'),
     { type:'line', data:buildBrandLineData('GreenGold'),
@@ -1450,7 +1547,7 @@ function buildBrandTable() {
 
 // ─── HISTORY ───
 let histChannel='GIN', histCharts={};
-function initHistory() { renderHistCards(); }
+function initHistory() { C = getC(); CD = getCD(); renderHistCards(); }
 function switchHistChannel(ch, el) {
   el.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
@@ -1504,7 +1601,7 @@ function renderHistCards() {
           {label:'2026',data:d26[brand],backgroundColor:C.gin,  borderRadius:5,barPercentage:.72}
         ]},
         options:{...CD,plugins:{...CD.plugins,
-          legend:{display:true,labels:{font:{size:11},boxWidth:9,color:'#1C1B2E',padding:12}},
+          legend:{display:true,labels:{font:{size:11},boxWidth:9,color:C.legendText,padding:12}},
           tooltip:{...CD.plugins.tooltip,callbacks:{label:ctx=>'  '+ctx.dataset.label+': '+fmtNTD(ctx.raw)}}
         }}
       });
@@ -1514,6 +1611,7 @@ function renderHistCards() {
 
 // ─── MEMBERS ───
 function initMembers() {
+  C = getC(); CD = getCD();
   const lastIdx = memberData.plCode.reduce((last,v,i)=>v>0?i:last, 0);
   // 只顯示有資料的月份（過濾掉後面的 0）
   const hasData = (arr) => arr.filter(v=>v>0).length;
@@ -1535,10 +1633,10 @@ function initMembers() {
   });
   new Chart(document.getElementById('memberPieChart').getContext('2d'),{
     type:'doughnut',
-    data:{labels:['PL 折扣碼','GIN 折扣碼'],datasets:[{data:[memberData.plCode[lastIdx],memberData.ginCode[lastIdx]],backgroundColor:[C.pl,C.gold],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    data:{labels:['PL 折扣碼','GIN 折扣碼'],datasets:[{data:[memberData.plCode[lastIdx],memberData.ginCode[lastIdx]],backgroundColor:[C.pl,C.gold],borderWidth:3,borderColor:isDark()?'#1A1A2A':'#FFFFFF',hoverOffset:6}]},
     options:{responsive:true,maintainAspectRatio:true,cutout:'58%',
-      plugins:{legend:{display:true,position:'bottom',labels:{font:{size:12},boxWidth:10,color:'#1C1B2E',padding:14}},
-        tooltip:{backgroundColor:'#fff',titleColor:'#1C1B2E',bodyColor:'#6B6880',borderColor:'#E2DEEF',borderWidth:1,padding:10,cornerRadius:10}
+      plugins:{legend:{display:true,position:'bottom',labels:{font:{size:12},boxWidth:10,color:C.legendText,padding:14}},
+        tooltip:{backgroundColor:C.tooltipBg,titleColor:C.tooltipTitle,bodyColor:C.tooltipBody,borderColor:C.tooltipBorder,borderWidth:1,padding:10,cornerRadius:10}
       }
     }
   });
@@ -1556,25 +1654,27 @@ function renderDailyRegFromData(dates, counts) {
   document.getElementById('dailyRegSub').textContent =
     `${dates[0]} ~ ${dates[dates.length-1]} · 共 ${dates.length} 天有開通記錄（由 Apps Script 同步）`;
   if(dailyRegChartInst){ dailyRegChartInst.destroy(); dailyRegChartInst=null; }
+  const rc = getC();
   dailyRegChartInst = new Chart(document.getElementById('dailyRegChart').getContext('2d'), {
     type:'bar',
     data:{ labels:dates, datasets:[{
       label:'當日開通人數', data:counts,
-      backgroundColor:'rgba(196,112,140,.75)', borderRadius:5, barPercentage:.7
+      backgroundColor: isDark() ? 'rgba(244,114,182,.6)' : 'rgba(219,39,119,.55)',
+      borderRadius:5, barPercentage:.7
     }]},
     options:{
       responsive:true, maintainAspectRatio:true,
       plugins:{
         legend:{display:false},
         tooltip:{
-          backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
-          borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
+          backgroundColor:rc.tooltipBg, titleColor:rc.tooltipTitle, bodyColor:rc.tooltipBody,
+          borderColor:rc.tooltipBorder, borderWidth:1, padding:10, cornerRadius:10,
           callbacks:{ label: ctx => `  開通 ${ctx.raw} 人` }
         }
       },
       scales:{
-        x:{ grid:{display:false}, ticks:{font:{size:10},color:'#9E9AB5',maxTicksLimit:24,maxRotation:45} },
-        y:{ grid:{color:'#EDEBF5'}, border:{display:false}, ticks:{font:{size:11},color:'#9E9AB5',stepSize:1} }
+        x:{ grid:{display:false}, ticks:{font:{size:10},color:rc.tickColor,maxTicksLimit:24,maxRotation:45} },
+        y:{ grid:{color:rc.gridLine}, border:{display:false}, ticks:{font:{size:11},color:rc.tickColor,stepSize:1} }
       }
     }
   });
@@ -1623,13 +1723,18 @@ async function loadDailyRegData() {
 // ─── LINE ───
 let lineFriendsChart = null, lineBlockChart = null;
 
-const lineTooltipOpts = {
-  backgroundColor:'#fff', titleColor:'#1C1B2E', bodyColor:'#6B6880',
-  borderColor:'#E2DEEF', borderWidth:1, padding:10, cornerRadius:10,
-  callbacks:{ label: ctx => '  '+ctx.dataset.label+': '+ctx.raw.toLocaleString() }
-};
+function getLineTooltipOpts() {
+  const c = getC();
+  return {
+    backgroundColor:c.tooltipBg, titleColor:c.tooltipTitle, bodyColor:c.tooltipBody,
+    borderColor:c.tooltipBorder, borderWidth:1, padding:10, cornerRadius:10,
+    callbacks:{ label: ctx => '  '+ctx.dataset.label+': '+ctx.raw.toLocaleString() }
+  };
+}
+let lineTooltipOpts = getLineTooltipOpts();
 
 function renderLineCharts(month) {
+  lineTooltipOpts = getLineTooltipOpts();
   const data = ALL_LINE_DATA[month] || [];
   const mLabel = MONTHS[month-1];
 
@@ -1649,15 +1754,16 @@ function renderLineCharts(month) {
 
   const friendsMax = Math.max(...data.map(d=>d.friends));
   const step = friendsMax > 5000 ? 1000 : 500;
+  const lc = getC();
   const lineScales = {
-    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
-    y: { min:0, grid:{color:'#EDEBF5'}, border:{display:false},
-         ticks:{font:{size:11},color:'#9E9AB5',stepSize:step,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
+    x: { grid:{display:false}, ticks:{font:{size:11},color:lc.tickColor} },
+    y: { min:0, grid:{color:lc.gridLine}, border:{display:false},
+         ticks:{font:{size:11},color:lc.tickColor,stepSize:step,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
   };
   const blockScales = {
-    x: { grid:{display:false}, ticks:{font:{size:11},color:'#9E9AB5'} },
-    y: { min:0, grid:{color:'#EDEBF5'}, border:{display:false},
-         ticks:{font:{size:11},color:'#9E9AB5',stepSize:100,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
+    x: { grid:{display:false}, ticks:{font:{size:11},color:lc.tickColor} },
+    y: { min:0, grid:{color:lc.gridLine}, border:{display:false},
+         ticks:{font:{size:11},color:lc.tickColor,stepSize:100,callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v} }
   };
   const labels = data.map(d=>d.date);
 
@@ -1753,11 +1859,51 @@ function switchWeekMonth(month, el) {
   }
 }
 
+// ─── DYNAMIC DATE BADGE ───
+// 根據資料自動計算最新有資料的月份+週次，更新總覽標題
+function updateOverviewDate() {
+  // 找最新有資料的月份（ginMonthly or plMonthly > 0）
+  let lastMonth = 1;
+  for(let i=0; i<12; i++) {
+    if(ginMonthly[i] > 0 || plMonthly[i] > 0) lastMonth = i+1;
+  }
+  // 找該月最新有資料的週次
+  const wd = ALL_WEEK_DATA[lastMonth];
+  let lastWeekLabel = '';
+  if(wd) {
+    for(let i=4; i>=0; i--) {
+      if(wd.gin[i] > 0 || wd.pl[i] > 0) { lastWeekLabel = ' W'+(i+1); break; }
+    }
+  }
+  // 計算大約日期（用 today 或推算週次末日）
+  const today = new Date();
+  const m = today.getMonth()+1;
+  const d = today.getDate();
+  const dateTxt = `${m}/${d}`;
+
+  const sub  = `2026 年度累計 · 至 ${lastMonth} 月${lastWeekLabel}（${dateTxt}）`;
+  const badge = `截至 ${m} / ${d}`;
+
+  const subEl  = document.getElementById('overviewPageSub');
+  const txtEl  = document.getElementById('overviewDateText');
+  if(subEl) subEl.textContent = sub;
+  if(txtEl) txtEl.textContent = badge;
+}
+
 // ─── BOOT ───
 window.addEventListener('DOMContentLoaded', async () => {
   // 先用本機備份資料畫一次，確保頁面不白屏（不等 Sheets）
   initOverview(); initBrands(); initHistory(); initMembers();
-  // 這一行移到 initLine 後面的保留宣告，initLine 已移除
+  updateOverviewDate();
+
+  // 初始化 theme toggle 按鈕狀態
+  const dark0 = isDark();
+  const lbl = document.getElementById('themeLabel');
+  const ico  = document.getElementById('themeIcon');
+  if(lbl) lbl.textContent = dark0 ? '淺色模式' : '深色模式';
+  if(ico) ico.innerHTML = dark0
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 
   // 再從 Sheets 抓最新資料，重繪（loadFromSheets 內有 8 秒 timeout 保護）
   await loadFromSheets();
@@ -1765,6 +1911,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // 銷毀並重建所有圖表
     Chart.instances && Object.values(Chart.instances).forEach(c=>c.destroy());
     initOverview(); initBrands(); initHistory(); initMembers();
+    updateOverviewDate();
     // 更新 sidebar 更新時間
     const now = new Date();
     const ts  = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -1774,6 +1921,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   } else {
     // Sheets 載入失敗（超時），確保 loading 已隱藏
     hideLoading();
+    updateOverviewDate();
   }
 });
 </script>
